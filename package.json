@@ -1,0 +1,40 @@
+{
+  "name": "feedback-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "start": "node server.js",
+    "test": "mocha --exit -t 300000"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/braydo25/FeedbackAPI.git"
+  },
+  "author": "Braydon Batungbacal",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/braydo25/FeedbackAPI/issues"
+  },
+  "homepage": "https://github.com/braydo25/FeedbackAPI#readme",
+  "dependencies": {
+    "aws-sdk": "^2.758.0",
+    "bcrypt": "^5.0.0",
+    "body-parser": "^1.19.0",
+    "compression": "^1.7.4",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-fileupload": "^1.2.0",
+    "mysql2": "^2.2.5",
+    "sequelize": "^6.3.5",
+    "uuid": "^8.3.0"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "eslint": "^7.9.0",
+    "mocha": "^8.1.3",
+    "wait-port": "^0.2.9"
+  }
+}
