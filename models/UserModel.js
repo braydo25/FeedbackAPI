@@ -1,3 +1,5 @@
+const bcrypt = require('bcrypt');
+
 /*
  * Model Definition
  */
@@ -23,7 +25,6 @@ const UserModel = database.define('user', {
   },
   password: {
     type: Sequelize.STRING,
-    // TODO
   },
   avatarUrl: {
     type: Sequelize.STRING,
@@ -32,6 +33,41 @@ const UserModel = database.define('user', {
     type: Sequelize.STRING,
   },
 });
+
+/*
+ * Hooks
+ */
+
+UserModel.addHook('beforeCreate', hashPassword);
+UserModel.addHook('beforeUpdate', hashPassword);
+
+async function hashPassword(instance) {
+  if (!instance.changed('password') || !instance.password) {
+    return;
+  }
+
+  instance.set('password', await bcrypt.hash(instance.password, 8));
+}
+
+/*
+ * Instance Methods
+ */
+
+UserModel.prototype.validatePassword = async function(password) {
+  if (!this.password) {
+    return true;
+  }
+
+  return bcrypt.compare(password, this.password);
+};
+
+UserModel.prototype.toJSON = function() {
+  const values = { ...this.get() };
+
+  delete values.password;
+
+  return values;
+};
 
 /*
  * Export

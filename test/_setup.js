@@ -14,6 +14,12 @@ global.server = `http://localhost:${process.env.PORT}`;
 
 global.enableTestResponseLogging = true;
 
+
+global.testUserOne = {
+  email: 'test@test.com',
+  password: 'test123',
+};
+
 /*
  * Configure Chai
  */
@@ -74,6 +80,16 @@ before(done => {
         return Promise.all(truncatePromises);
       });
     });
+
+    fatLog('Creating global test user one...');
+    const createdTestUserOneResponse = await chai.request(server).post('/users').send(testUserOne);
+    testUserOne = { ...createdTestUserOneResponse.body, ...testUserOne };
+
+    fatLog('Setting password for test user one...');
+    await chai.request(server)
+      .patch('/users/me')
+      .set('X-Access-Token', testUserOne.accessToken)
+      .send({ password: testUserOne.password });
 
     done();
   })();
