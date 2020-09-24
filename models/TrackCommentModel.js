@@ -8,6 +8,10 @@ const TrackCommentModel = database.define('trackComment', {
     primaryKey: true,
     autoIncrement: true,
   },
+  trackId: {
+    type: Sequelize.INTEGER(10).UNSIGNED,
+    allowNull: false,
+  },
   userId: {
     type: Sequelize.INTEGER(10).UNSIGNED,
     allowNull: false,

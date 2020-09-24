@@ -16,7 +16,11 @@ module.exports = app => {
     limit: serverConfig.maxRequestBodySize,
   }));
 
-  app.use(fileUpload());
+  app.use(fileUpload({
+    uploadTimeout: 5 * 60 * 1000,
+    useTempFiles: true,
+    tempFileDir: '/tmp/',
+  }));
 
   app.use(logging);
 };

@@ -5,12 +5,12 @@ const awsConfig = rootRequire('/config/aws');
  * S3
  */
 
-async function uploadFileToS3(buffer, filename) {
+async function uploadToS3(streamOrBuffer, filename) {
   const s3 = new aws.S3();
   const keyPrefix = Math.random().toString(32).substring(2, 15);
   const result = await s3.upload({
     ACL: 'public-read',
-    Body: buffer,
+    Body: streamOrBuffer,
     Bucket: awsConfig.s3FileUploadsBucket,
     Key: `${keyPrefix}/${filename}`,
   }).promise();
@@ -36,6 +36,6 @@ function logEvent({ event, data }) {
  */
 
 module.exports = {
-  uploadFileToS3,
+  uploadToS3,
   logEvent,
 };

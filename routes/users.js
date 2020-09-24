@@ -18,7 +18,7 @@ router.post('/', asyncMiddleware(async (request, response) => {
   const { email, password } = request.body;
 
   if (!email) {
-    throw new Error('An email address must be provided');
+    throw new Error('An email must be provided');
   }
 
   let user = await UserModel.findOne({
@@ -44,19 +44,17 @@ router.patch('/me', userAuthorize);
 router.patch('/me', asyncMiddleware(async (request, response) => {
   const { user, files } = request;
   const { name, password } = request.body;
-  const avatar = (files && files.avatar) ? files.avatar : null;
+  const avatarFile = (files && files.avatar) ? files.avatar : null;
+  const data = {
+    name: name || user.name,
+    password,
+  };
 
-  let avatarUrl = user.avatarUrl;
-
-  if (avatar && avatar.mimetype.includes('image/')) {
-    avatarUrl = await awsHelpers.uploadFileToS3(avatar.data, avatar.name);
+  if (avatarFile && avatarFile.mimetype.includes('image/')) {
+    data.avatarUrl = await awsHelpers.uploadToS3(avatarFile.data, avatarFile.name);
   }
 
-  await user.update({
-    avatarUrl,
-    password,
-    name: name || user.name,
-  });
+  await user.update(data);
 
   response.success(user);
 }));

@@ -27,6 +27,7 @@
     "express": "^4.17.1",
     "express-fileupload": "^1.2.0",
     "mysql2": "^2.2.5",
+    "node-lame": "^1.2.2",
     "sequelize": "^6.3.5",
     "uuid": "^8.3.0"
   },
