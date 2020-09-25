@@ -2,6 +2,8 @@
  * Route: /game
  */
 
+const TrackModel = rootRequire('/models/TrackModel');
+const userAuthorize = rootRequire('/middlewares/users/authorize');
 const router = express.Router({
   mergeParams: true,
 });
@@ -10,8 +12,9 @@ const router = express.Router({
  * GET
  */
 
+router.get('/', userAuthorize);
 router.get('/', (request, response) => {
-  response.success();
+
 });
 
 /*

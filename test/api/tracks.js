@@ -41,8 +41,31 @@ describe('Tracks', () => {
    */
 
   describe('GET /tracks', () => {
-    it('200s with created tracks for authorized user', done => {
-      done();
+    it('200s with an array of created tracks for authorized user', done => {
+      chai.request(server)
+        .get('/tracks')
+        .set('X-Access-Token', testUserOne.accessToken)
+        .end((error, response) => {
+          helpers.logExampleResponse(response);
+          response.should.have.status(200);
+          response.body.should.be.an('array');
+          response.body.length.should.be.at.least(1);
+          response.body.forEach(track => {
+            track.should.be.an('object');
+            track.should.have.property('name');
+            track.should.have.property('description');
+            track.should.have.property('originalUrl');
+            track.should.have.property('mp3Url');
+            track.should.have.property('checksum');
+            track.should.have.property('sampleRate');
+            track.should.have.property('waveform');
+            track.should.have.property('duration');
+            track.genre.should.be.an('object');
+            track.genre.should.have.property('name');
+            track.genre.should.have.property('description');
+          });
+          done();
+        });
     });
 
     helpers.it401sWhenUserAuthorizationIsInvalid('get', '/tracks');

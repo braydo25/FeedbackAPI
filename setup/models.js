@@ -1,8 +1,12 @@
 const GenreModel = rootRequire('/models/GenreModel');
 const TrackCommentModel = rootRequire('/models/TrackCommentModel');
+const TrackPlayModel = rootRequire('/models/TrackPlayModel');
 const TrackModel = rootRequire('/models/TrackModel');
 const UserDeviceModel = rootRequire('/models/UserDeviceModel');
 const UserModel = rootRequire('/models/UserModel');
+
+TrackPlayModel.belongsTo(UserModel);
+TrackPlayModel.belongsTo(TrackModel);
 
 TrackModel.belongsTo(GenreModel);
 TrackModel.belongsTo(UserModel);

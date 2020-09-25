@@ -71,6 +71,7 @@ describe('Users', () => {
       const fields = {
         name: 'new name boiii',
         password: '123abc',
+        preferredGenreIds: [ 1, 5, 7 ],
       };
 
       chai.request(server)
@@ -82,6 +83,7 @@ describe('Users', () => {
           response.should.have.status(200);
           response.body.name.should.equal(fields.name);
           response.body.should.not.have.property('password');
+          response.body.preferredGenreIds.should.deep.equal(fields.preferredGenreIds);
           done();
         });
     });

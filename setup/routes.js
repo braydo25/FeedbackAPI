@@ -3,6 +3,7 @@ const genresRouter = rootRequire('/routes/genres');
 const healthRouter = rootRequire('/routes/health');
 const tracksRouter = rootRequire('/routes/tracks');
 const trackCommentsRouter = rootRequire('/routes/tracks/comments');
+const trackPlaysRouter = rootRequire('/routes/tracks/plays');
 const usersRouter = rootRequire('/routes/users');
 
 module.exports = app => {
@@ -12,6 +13,7 @@ module.exports = app => {
   app.use('/health', healthRouter);
   app.use('/tracks/:trackId?', tracksRouter);
   app.use('/tracks/:trackId/comments/:trackCommentId?', trackCommentsRouter);
+  app.use('/tracks/:trackId/plays', trackPlaysRouter);
   app.use('/users', usersRouter);
 
   // Handle Various Errors

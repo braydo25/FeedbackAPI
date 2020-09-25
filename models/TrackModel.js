@@ -1,8 +1,8 @@
+const GenreModel = rootRequire('/models/GenreModel');
+
 /*
  * Model Definition
  */
-
-const TrackCommentModel = rootRequire('/models/TrackCommentModel');
 
 const TrackModel = database.define('track', {
   id: {
@@ -42,6 +42,12 @@ const TrackModel = database.define('track', {
   },
   duration: {
     type: Sequelize.INTEGER.UNSIGNED,
+  },
+}, {
+  scopes: {
+    withGenre: {
+      include: [ { model: GenreModel } ],
+    },
   },
 });
 

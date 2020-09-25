@@ -17,7 +17,13 @@ const router = express.Router({
 
 router.get('/', userAuthorize);
 router.get('/', asyncMiddleware(async (request, response) => {
-  response.success();
+  const { user } = request;
+
+  const tracks = await TrackModel.scope('withGenre').findAll({
+    where: { userId: user.id },
+  });
+
+  response.success(tracks);
 }));
 
 /*
