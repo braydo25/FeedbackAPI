@@ -56,6 +56,14 @@ router.patch('/', asyncMiddleware(async (request, response) => {
   };
 
   if (audioFile && !track.mp3Url) {
+    const existingTrackWithAudio = await TrackModel.findOne({
+      where: { checksum: audioFile.md5 },
+    });
+
+    if (existingTrackWithAudio) {
+      throw new Error('This audio has already been uploaded by you or another user.');
+    }
+
     const audioData = await audioHelpers.processAndUploadAudio(audioFile, true);
 
     data.checksum = audioFile.md5;
@@ -76,7 +84,12 @@ router.patch('/', asyncMiddleware(async (request, response) => {
  */
 
 router.delete('/', userAuthorize);
+router.delete('/', trackAuthorize);
 router.delete('/', asyncMiddleware(async (request, response) => {
+  const { track } = request;
+
+  await track.destroy();
+
   response.success();
 }));
 

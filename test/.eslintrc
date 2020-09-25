@@ -11,5 +11,7 @@
     "server": true,
     "enableTestResponseLogging": true,
     "testUserOne": true,
+    "testUserTwo": true,
+    "testTrackOne": true,
   },
 }

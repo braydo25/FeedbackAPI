@@ -81,7 +81,7 @@ describe('Tracks', () => {
       chai.request(server)
         .patch(`/tracks/${scopedTrack.id}`)
         .set('X-Access-Token', testUserOne.accessToken)
-        .attach('audio', fs.readFileSync('./test/song.mp3'), 'song.mp3')
+        .attach('audio', fs.readFileSync('./test/song2.mp3'), 'song.mp3')
         .end((error, response) => {
           helpers.logExampleResponse(response);
           response.should.have.status(200);
@@ -102,7 +102,7 @@ describe('Tracks', () => {
       chai.request(server)
         .patch(`/tracks/${scopedTrack.id}`)
         .set('X-Access-Token', testUserOne.accessToken)
-        .attach('audio', fs.readFileSync('./test/song.mp3'), 'song.mp3')
+        .attach('audio', fs.readFileSync('./test/song2.mp3'), 'song.mp3')
         .end((error, response) => {
           helpers.logExampleResponse(response);
           response.should.have.status(200);
@@ -126,7 +126,14 @@ describe('Tracks', () => {
 
   describe('DELETE /tracks/:trackId', () => {
     it('204s and deletes track', done => {
-      done();
+      chai.request(server)
+        .delete(`/tracks/${scopedTrack.id}`)
+        .set('X-Access-Token', testUserOne.accessToken)
+        .end((error, response) => {
+          helpers.logExampleResponse(response);
+          response.should.have.status(204);
+          done();
+        });
     });
 
     helpers.it401sWhenUserAuthorizationIsInvalid('delete', '/tracks/1');

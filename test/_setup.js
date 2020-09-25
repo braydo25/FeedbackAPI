@@ -5,6 +5,12 @@
 require('dotenv').config();
 
 /*
+ * Dependencies
+ */
+
+const fs = require('fs');
+
+/*
  * Set Globals
  */
 
@@ -18,6 +24,17 @@ global.enableTestResponseLogging = true;
 global.testUserOne = {
   email: 'test@test.com',
   password: 'test123',
+};
+
+global.testUserTwo = {
+  email: 'test2@test2.com',
+  password: 'test456',
+};
+
+global.testTrackOne = {
+  genreId: 14,
+  name: 'Fighting Demons (Null Remix)',
+  description: 'This was a fun project. I love juice wrlds music and wanted to rework fighting demons.',
 };
 
 /*
@@ -124,6 +141,29 @@ before(done => {
       .patch('/users/me')
       .set('X-Access-Token', testUserOne.accessToken)
       .send({ password: testUserOne.password });
+
+    fatLog('Creating global test user two...');
+    const createdTestUserTwoResponse = await chai.request(server).post('/users').send(testUserTwo);
+    testUserTwo = { ...createdTestUserTwoResponse.body, ...testUserTwo };
+
+    fatLog('Setting password for test user two...');
+    await chai.request(server)
+      .patch('/users/me')
+      .set('X-Access-Token', testUserTwo.accessToken)
+      .send({ password: testUserTwo.password });
+
+    fatLog('Creating global test track one...');
+    const createdTestTrackOneResponse = await chai.request(server)
+      .post('/tracks')
+      .set('X-Access-Token', testUserOne.accessToken)
+      .send(testTrackOne);
+    testTrackOne = { ...createdTestTrackOneResponse.body, ...testTrackOne };
+
+    fatLog('Uploading audio for global test track one...');
+    await chai.request(server)
+      .patch(`/tracks/${testTrackOne.id}`)
+      .set('X-Access-Token', testUserOne.accessToken)
+      .attach('audio', fs.readFileSync('./test/song.mp3'), 'song.mp3');
 
     done();
   })();
