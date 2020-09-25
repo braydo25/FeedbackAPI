@@ -81,6 +81,40 @@ before(done => {
       });
     });
 
+    fatLog('Creating genres...');
+    await Promise.all([
+      database.query('INSERT INTO genres (name, updatedAt, createdAt) VALUES("Alternative Rock", NOW(), NOW())'),
+      database.query('INSERT INTO genres (name, updatedAt, createdAt) VALUES("Ambient", NOW(), NOW())'),
+      database.query('INSERT INTO genres (name, updatedAt, createdAt) VALUES("Classical", NOW(), NOW())'),
+      database.query('INSERT INTO genres (name, updatedAt, createdAt) VALUES("Cinema", NOW(), NOW())'),
+      database.query('INSERT INTO genres (name, updatedAt, createdAt) VALUES("Country", NOW(), NOW())'),
+      database.query('INSERT INTO genres (name, updatedAt, createdAt) VALUES("Dance & EDM", NOW(), NOW())'),
+      database.query('INSERT INTO genres (name, updatedAt, createdAt) VALUES("Dancehall", NOW(), NOW())'),
+      database.query('INSERT INTO genres (name, updatedAt, createdAt) VALUES("Deep House", NOW(), NOW())'),
+      database.query('INSERT INTO genres (name, updatedAt, createdAt) VALUES("Disco", NOW(), NOW())'),
+      database.query('INSERT INTO genres (name, updatedAt, createdAt) VALUES("Drum & Bass", NOW(), NOW())'),
+      database.query('INSERT INTO genres (name, updatedAt, createdAt) VALUES("Dubstep", NOW(), NOW())'),
+      database.query('INSERT INTO genres (name, updatedAt, createdAt) VALUES("Electronic", NOW(), NOW())'),
+      database.query('INSERT INTO genres (name, updatedAt, createdAt) VALUES("Folk & Singer-Songwriter", NOW(), NOW())'),
+      database.query('INSERT INTO genres (name, updatedAt, createdAt) VALUES("Hip-Hop & Rap", NOW(), NOW())'),
+      database.query('INSERT INTO genres (name, updatedAt, createdAt) VALUES("House", NOW(), NOW())'),
+      database.query('INSERT INTO genres (name, updatedAt, createdAt) VALUES("Indie", NOW(), NOW())'),
+      database.query('INSERT INTO genres (name, updatedAt, createdAt) VALUES("Jazz & Blues", NOW(), NOW())'),
+      database.query('INSERT INTO genres (name, updatedAt, createdAt) VALUES("Latin", NOW(), NOW())'),
+      database.query('INSERT INTO genres (name, updatedAt, createdAt) VALUES("Metal", NOW(), NOW())'),
+      database.query('INSERT INTO genres (name, updatedAt, createdAt) VALUES("Piano", NOW(), NOW())'),
+      database.query('INSERT INTO genres (name, updatedAt, createdAt) VALUES("Pop", NOW(), NOW())'),
+      database.query('INSERT INTO genres (name, updatedAt, createdAt) VALUES("R&B & Soul", NOW(), NOW())'),
+      database.query('INSERT INTO genres (name, updatedAt, createdAt) VALUES("Reggae", NOW(), NOW())'),
+      database.query('INSERT INTO genres (name, updatedAt, createdAt) VALUES("Reggaeton", NOW(), NOW())'),
+      database.query('INSERT INTO genres (name, updatedAt, createdAt) VALUES("Rock", NOW(), NOW())'),
+      database.query('INSERT INTO genres (name, updatedAt, createdAt) VALUES("Techno", NOW(), NOW())'),
+      database.query('INSERT INTO genres (name, updatedAt, createdAt) VALUES("Trance", NOW(), NOW())'),
+      database.query('INSERT INTO genres (name, updatedAt, createdAt) VALUES("Trap", NOW(), NOW())'),
+      database.query('INSERT INTO genres (name, updatedAt, createdAt) VALUES("Triphop", NOW(), NOW())'),
+      database.query('INSERT INTO genres (name, updatedAt, createdAt) VALUES("World", NOW(), NOW())'),
+    ]);
+
     fatLog('Creating global test user one...');
     const createdTestUserOneResponse = await chai.request(server).post('/users').send(testUserOne);
     testUserOne = { ...createdTestUserOneResponse.body, ...testUserOne };

@@ -27,10 +27,11 @@ router.get('/', asyncMiddleware(async (request, response) => {
 router.post('/', userAuthorize);
 router.post('/', asyncMiddleware(async (request, response) => {
   const { user } = request;
-  const { name, description /*genre*/ } = request.body;
+  const { name, description, genreId } = request.body;
 
   const track = await TrackModel.create({
     userId: user.id,
+    genreId,
     name,
     description,
   });
@@ -46,15 +47,16 @@ router.patch('/', userAuthorize);
 router.patch('/', trackAuthorize);
 router.patch('/', asyncMiddleware(async (request, response) => {
   const { track, files } = request;
-  const { name, description } = request.body;
+  const { genreId, name, description } = request.body;
   const audioFile = (files && files.audio) ? files.audio : null;
   const data = {
+    genreId: genreId || track.genreId,
     name: name || track.name,
     description: description || track.description,
   };
 
-  if (audioFile && !track.url) {
-    const audioData = await audioHelpers.processAndUploadAudio(audioFile);
+  if (audioFile && !track.mp3Url) {
+    const audioData = await audioHelpers.processAndUploadAudio(audioFile, true);
 
     data.checksum = audioFile.md5;
     data.originalUrl = audioData.originalUrl;
@@ -66,7 +68,7 @@ router.patch('/', asyncMiddleware(async (request, response) => {
 
   await track.update(data);
 
-  response.success();
+  response.success(track);
 }));
 
 /*

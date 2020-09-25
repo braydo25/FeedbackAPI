@@ -3,6 +3,7 @@
  */
 
 require('./api/health');
+require('./api/genres');
 require('./api/users');
 require('./api/tracks');
 require('./api/tracks/comments');

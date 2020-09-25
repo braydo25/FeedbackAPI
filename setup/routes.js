@@ -1,4 +1,5 @@
 const gameRouter = rootRequire('/routes/game');
+const genresRouter = rootRequire('/routes/genres');
 const healthRouter = rootRequire('/routes/health');
 const tracksRouter = rootRequire('/routes/tracks');
 const trackCommentsRouter = rootRequire('/routes/tracks/comments');
@@ -7,6 +8,7 @@ const usersRouter = rootRequire('/routes/users');
 module.exports = app => {
   // API Route Definitions
   app.use('/game', gameRouter);
+  app.use('/genres', genresRouter);
   app.use('/health', healthRouter);
   app.use('/tracks/:trackId?', tracksRouter);
   app.use('/tracks/:trackId/comments/:trackCommentId?', trackCommentsRouter);
