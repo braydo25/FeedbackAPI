@@ -26,7 +26,7 @@ router.post('/', asyncMiddleware(async (request, response) => {
   });
 
   if (user && !(await user.validatePassword(password))) {
-    throw new Error('Invalid password provided.');
+    response.respond(403, 'Invalid password provided.');
   }
 
   if (!user) {

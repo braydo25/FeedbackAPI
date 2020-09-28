@@ -45,7 +45,7 @@ describe('Users', () => {
         });
     });
 
-    it('400s when provided an email and incorrect password', done => {
+    it('403s when provided an email and incorrect password', done => {
       const fields = {
         email: testUserOne.email,
         password: 'badpassword',
@@ -56,7 +56,7 @@ describe('Users', () => {
         .send(fields)
         .end((error, response) => {
           helpers.logExampleResponse(response);
-          response.should.have.status(400);
+          response.should.have.status(403);
           done();
         });
     });
@@ -70,7 +70,7 @@ describe('Users', () => {
     it('200s with updated user object', done => {
       const fields = {
         name: 'new name boiii',
-        password: '123abc',
+        password: '123abcdef',
         preferredGenreIds: [ 1, 5, 7 ],
       };
 

@@ -75,6 +75,10 @@ UserModel.prototype.validatePassword = async function(password) {
     return true;
   }
 
+  if (!password) {
+    return false;
+  }
+
   return bcrypt.compare(password, this.password);
 };
 
