@@ -20,6 +20,10 @@ const TrackCommentModel = database.define('trackComment', {
     type: Sequelize.TEXT,
     allowNull: false,
   },
+  time: {
+    type: Sequelize.INTEGER.UNSIGNED,
+    allowNull: false,
+  },
 });
 
 /*

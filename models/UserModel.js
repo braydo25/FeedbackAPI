@@ -35,6 +35,16 @@ const UserModel = database.define('user', {
   preferredGenreIds: {
     type: Sequelize.JSON,
   },
+}, {
+  scopes: {
+    trackUser: {
+      attributes: [
+        'id',
+        'avatarUrl',
+        'name',
+      ],
+    },
+  },
 });
 
 /*
@@ -47,6 +57,10 @@ UserModel.addHook('beforeUpdate', hashPassword);
 async function hashPassword(instance) {
   if (!instance.changed('password') || !instance.password) {
     return;
+  }
+
+  if (instance.password.length < 8) {
+    throw new Error('Your password must be at least 8 characters long.');
   }
 
   instance.set('password', await bcrypt.hash(instance.password, 8));

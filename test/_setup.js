@@ -23,18 +23,29 @@ global.enableTestResponseLogging = true;
 
 global.testUserOne = {
   email: 'test@test.com',
-  password: 'test123',
+  password: 'test123456',
 };
 
 global.testUserTwo = {
   email: 'test2@test2.com',
-  password: 'test456',
+  password: 'test456789',
 };
 
 global.testTrackOne = {
   genreId: 14,
   name: 'Fighting Demons (Null Remix)',
   description: 'This was a fun project. I love juice wrlds music and wanted to rework fighting demons.',
+};
+
+global.testTrackTwo = {
+  genreId: 6,
+  name: 'Billie Eilish - you should see me in a crown (IIZI Remix)',
+};
+
+global.testTrackThree = {
+  genreId: 6,
+  name: 'Alison Wonderland x Naderi - Shape Of U (Cover)',
+  description: '"This is one of my favorite tracks and I really wanted to remix it, but Ed Sheeran didn\'t reply to my twitter when I asked to remix it! So then Naderi and I decided to cover it when I was in Australia with him. It was really fun to recreate and I hope it makes you as happy as it does me." - Alison Wonderland',
 };
 
 /*
@@ -164,6 +175,32 @@ before(done => {
       .patch(`/tracks/${testTrackOne.id}`)
       .set('X-Access-Token', testUserOne.accessToken)
       .attach('audio', fs.readFileSync('./test/song.mp3'), 'song.mp3');
+
+    fatLog('Creating global test track two...');
+    const createdTestTrackTwoResponse = await chai.request(server)
+      .post('/tracks')
+      .set('X-Access-Token', testUserOne.accessToken)
+      .send(testTrackTwo);
+    testTrackTwo = { ...createdTestTrackTwoResponse.body, ...testTrackTwo };
+
+    fatLog('Uploading audio for global test track two...');
+    await chai.request(server)
+      .patch(`/tracks/${testTrackTwo.id}`)
+      .set('X-Access-Token', testUserOne.accessToken)
+      .attach('audio', fs.readFileSync('./test/testSong1.mp3'), 'song.mp3');
+
+    fatLog('Creating global test track three...');
+    const createdTestTrackThreeResponse = await chai.request(server)
+      .post('/tracks')
+      .set('X-Access-Token', testUserOne.accessToken)
+      .send(testTrackThree);
+    testTrackThree = { ...createdTestTrackThreeResponse.body, ...testTrackThree };
+
+    fatLog('Uploading audio for global test track three...');
+    await chai.request(server)
+      .patch(`/tracks/${testTrackThree.id}`)
+      .set('X-Access-Token', testUserOne.accessToken)
+      .attach('audio', fs.readFileSync('./test/testSong2.mp3'), 'song.mp3');
 
     done();
   })();

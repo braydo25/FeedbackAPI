@@ -11,6 +11,7 @@ describe('Track Comments', () => {
     it('200s with created track comment', done => {
       const fields = {
         text: 'this is awesome! Love everything about this track.',
+        time: 123,
       };
 
       chai.request(server)
@@ -32,6 +33,7 @@ describe('Track Comments', () => {
     it('400s when requesting user is creator of track', done => {
       const fields = {
         text: 'this is a test yo yo yo!',
+        time: 16,
       };
 
       chai.request(server)

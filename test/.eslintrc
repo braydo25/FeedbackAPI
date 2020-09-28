@@ -13,5 +13,7 @@
     "testUserOne": true,
     "testUserTwo": true,
     "testTrackOne": true,
+    "testTrackTwo": true,
+    "testTrackThree": true,
   },
 }

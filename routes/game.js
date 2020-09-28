@@ -12,10 +12,12 @@ const router = express.Router({
  * GET
  */
 
-router.get('/', userAuthorize);
-router.get('/', (request, response) => {
+//router.get('/', userAuthorize);
+router.get('/', asyncMiddleware(async (request, response) => {
+  const tracks = await TrackModel.scope([ 'withGenre', 'withUser' ]).findAll();
 
-});
+  response.success(tracks);
+}));
 
 /*
  * Export

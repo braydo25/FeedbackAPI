@@ -19,7 +19,7 @@ router.post('/', userAuthorize);
 router.post('/', trackAssociate);
 router.post('/', asyncMiddleware(async (request, response) => {
   const { user, track } = request;
-  const { text } = request.body;
+  const { text, time } = request.body;
 
   if (user.id === track.userId) {
     throw new Error('You cannot comment on your own tracks.');
@@ -29,6 +29,7 @@ router.post('/', asyncMiddleware(async (request, response) => {
     trackId: track.id,
     userId: user.id,
     text,
+    time,
   });
 
   response.success(trackComment);

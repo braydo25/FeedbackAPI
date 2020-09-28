@@ -56,8 +56,12 @@ async function _getAudioData(audioFilePath) {
       }
 
       const data = JSON.parse(stdout);
+      const waveformPeak = data.data.reduce((waveformPeak, wave) => {
+        return (Math.abs(wave) > waveformPeak) ? Math.abs(wave) : waveformPeak;
+      }, 0);
 
       data.duration = data.length * (88200 / data.sample_rate);
+      data.data = data.data.map(wave => Math.floor((Math.abs(wave) / waveformPeak) * 100));
 
       resolve(data);
     });

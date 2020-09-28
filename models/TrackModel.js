@@ -1,4 +1,5 @@
 const GenreModel = rootRequire('/models/GenreModel');
+const UserModel = rootRequire('/models/UserModel');
 
 /*
  * Model Definition
@@ -44,9 +45,26 @@ const TrackModel = database.define('track', {
     type: Sequelize.INTEGER.UNSIGNED,
   },
 }, {
+  defaultScope: {
+    attributes: [
+      'id',
+      'userId',
+      'genreId',
+      'name',
+      'description',
+      'originalUrl',
+      'mp3Url',
+      'sampleRate',
+      'waveform',
+      'duration',
+    ],
+  },
   scopes: {
     withGenre: {
       include: [ { model: GenreModel } ],
+    },
+    withUser: {
+      include: [ { model: UserModel.scope('trackUser') } ],
     },
   },
 });
