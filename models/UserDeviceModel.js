@@ -12,11 +12,11 @@ const UserDeviceModel = database.define('userDevice', {
     type: Sequelize.INTEGER(10).UNSIGNED,
     allowNull: false,
   },
-  ip: {
-    type: Sequelize.STRING,
+  uuid: {
+    type: Sequelize.INTEGER(10).UNSIGNED,
     allowNull: false,
   },
-  idfv: {
+  ip: {
     type: Sequelize.STRING,
     allowNull: false,
   },

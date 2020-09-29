@@ -9,3 +9,4 @@ require('./api/tracks');
 require('./api/tracks/comments');
 require('./api/tracks/plays');
 require('./api/game');
+require('./api/devices');

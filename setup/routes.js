@@ -1,3 +1,4 @@
+const devicesRouter = rootRequire('/routes/devices');
 const gameRouter = rootRequire('/routes/game');
 const genresRouter = rootRequire('/routes/genres');
 const healthRouter = rootRequire('/routes/health');
@@ -8,6 +9,7 @@ const usersRouter = rootRequire('/routes/users');
 
 module.exports = app => {
   // API Route Definitions
+  app.use('/devices', devicesRouter);
   app.use('/game', gameRouter);
   app.use('/genres', genresRouter);
   app.use('/health', healthRouter);
