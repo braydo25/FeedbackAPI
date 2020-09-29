@@ -27,7 +27,7 @@ async function processAndUploadAudio(audioFile) {
   ]);
 
   // cleanup
-  fs.unlink(originalWithExtensionAudioPath, error => { console.log(error); });
+  fs.unlink(originalWithExtensionAudioPath, error => console.log(error));
 
   return {
     originalUrl,

@@ -2,6 +2,7 @@
  * Route: /users
  */
 
+const fs = require('fs');
 const UserModel = rootRequire('/models/UserModel');
 const userAuthorize = rootRequire('/middlewares/users/authorize');
 const awsHelpers = rootRequire('/libs/awsHelpers');
@@ -52,7 +53,11 @@ router.patch('/me', asyncMiddleware(async (request, response) => {
   };
 
   if (avatarFile && avatarFile.mimetype.includes('image/')) {
-    data.avatarUrl = await awsHelpers.uploadToS3(avatarFile.data, avatarFile.name);
+    const avatarReadStream = fs.createReadStream(avatarFile.tempFilePath);
+
+    data.avatarUrl = await awsHelpers.uploadToS3(avatarReadStream, avatarFile.name);
+
+    fs.unlink(avatarFile.tempFilePath, error => console.log(error)); // cleanup
   }
 
   await user.update(data);
