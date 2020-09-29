@@ -13,7 +13,7 @@ const UserDeviceModel = database.define('userDevice', {
     allowNull: false,
   },
   uuid: {
-    type: Sequelize.INTEGER(10).UNSIGNED,
+    type: Sequelize.STRING,
     allowNull: false,
   },
   ip: {
