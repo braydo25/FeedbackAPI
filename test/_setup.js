@@ -167,40 +167,30 @@ before(done => {
     const createdTestTrackOneResponse = await chai.request(server)
       .post('/tracks')
       .set('X-Access-Token', testUserOne.accessToken)
-      .send(testTrackOne);
-    testTrackOne = { ...createdTestTrackOneResponse.body, ...testTrackOne };
-
-    fatLog('Uploading audio for global test track one...');
-    await chai.request(server)
-      .patch(`/tracks/${testTrackOne.id}`)
-      .set('X-Access-Token', testUserOne.accessToken)
+      .field('genreId', testTrackOne.genreId)
+      .field('name', testTrackOne.name)
+      .field('description', testTrackOne.description)
       .attach('audio', fs.readFileSync('./test/song.mp3'), 'song.mp3');
+    testTrackOne = { ...createdTestTrackOneResponse.body, ...testTrackOne };
 
     fatLog('Creating global test track two...');
     const createdTestTrackTwoResponse = await chai.request(server)
       .post('/tracks')
       .set('X-Access-Token', testUserOne.accessToken)
-      .send(testTrackTwo);
-    testTrackTwo = { ...createdTestTrackTwoResponse.body, ...testTrackTwo };
-
-    fatLog('Uploading audio for global test track two...');
-    await chai.request(server)
-      .patch(`/tracks/${testTrackTwo.id}`)
-      .set('X-Access-Token', testUserOne.accessToken)
+      .field('genreId', testTrackTwo.genreId)
+      .field('name', testTrackTwo.name)
       .attach('audio', fs.readFileSync('./test/testSong1.mp3'), 'song.mp3');
+    testTrackTwo = { ...createdTestTrackTwoResponse.body, ...testTrackTwo };
 
     fatLog('Creating global test track three...');
     const createdTestTrackThreeResponse = await chai.request(server)
       .post('/tracks')
       .set('X-Access-Token', testUserOne.accessToken)
-      .send(testTrackThree);
-    testTrackThree = { ...createdTestTrackThreeResponse.body, ...testTrackThree };
-
-    fatLog('Uploading audio for global test track three...');
-    await chai.request(server)
-      .patch(`/tracks/${testTrackThree.id}`)
-      .set('X-Access-Token', testUserOne.accessToken)
+      .field('genreId', testTrackThree.genreId)
+      .field('name', testTrackThree.name)
+      .field('description', testTrackThree.description)
       .attach('audio', fs.readFileSync('./test/testSong2.mp3'), 'song.mp3');
+    testTrackThree = { ...createdTestTrackThreeResponse.body, ...testTrackThree };
 
     done();
   })();

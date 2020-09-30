@@ -32,14 +32,35 @@ router.get('/', asyncMiddleware(async (request, response) => {
 
 router.post('/', userAuthorize);
 router.post('/', asyncMiddleware(async (request, response) => {
-  const { user } = request;
+  const { user, files } = request;
   const { name, description, genreId } = request.body;
+  const audioFile = (files && files.audio) ? files.audio : null;
+
+  if (!audioFile) {
+    throw new Error('An audio file must be provided.');
+  }
+
+  const existingTrackWithAudio = await TrackModel.findOne({
+    where: { checksum: audioFile.md5 },
+  });
+
+  if (existingTrackWithAudio) {
+    throw new Error('This audio has already been uploaded by you or another user.');
+  }
+
+  const audioData = await audioHelpers.processAndUploadAudio(audioFile, true);
 
   const track = await TrackModel.create({
     userId: user.id,
-    genreId,
     name,
     description,
+    genreId,
+    checksum: audioFile.md5,
+    originalUrl: audioData.originalUrl,
+    mp3Url: audioData.mp3Url,
+    sampleRate: audioData.sampleRate,
+    duration: audioData.duration,
+    waveform: audioData.waveform,
   });
 
   response.success(track);
@@ -52,35 +73,14 @@ router.post('/', asyncMiddleware(async (request, response) => {
 router.patch('/', userAuthorize);
 router.patch('/', trackAuthorize);
 router.patch('/', asyncMiddleware(async (request, response) => {
-  const { track, files } = request;
+  const { track } = request;
   const { genreId, name, description } = request.body;
-  const audioFile = (files && files.audio) ? files.audio : null;
-  const data = {
+
+  await track.update({
     genreId: genreId || track.genreId,
     name: name || track.name,
     description: description || track.description,
-  };
-
-  if (audioFile && !track.mp3Url) {
-    const existingTrackWithAudio = await TrackModel.findOne({
-      where: { checksum: audioFile.md5 },
-    });
-
-    if (existingTrackWithAudio) {
-      throw new Error('This audio has already been uploaded by you or another user.');
-    }
-
-    const audioData = await audioHelpers.processAndUploadAudio(audioFile, true);
-
-    data.checksum = audioFile.md5;
-    data.originalUrl = audioData.originalUrl;
-    data.mp3Url = audioData.mp3Url;
-    data.sampleRate = audioData.sampleRate;
-    data.duration = audioData.duration;
-    data.waveform = audioData.waveform;
-  }
-
-  await track.update(data);
+  });
 
   response.success(track);
 }));
