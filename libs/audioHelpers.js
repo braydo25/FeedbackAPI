@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const { exec } = require('child_process');
-const { Lame } = require('node-lame');
+const ffmpegPath = require('ffmpeg-static');;
 const uuidv4 = require('uuid').v4;
 const awsHelpers = rootRequire('/libs/awsHelpers');
 
@@ -13,10 +13,8 @@ async function processAndUploadAudio(audioFile) {
   // LAME and AudioWaveForm require the extension, expressFileUpload doesn't preserve it on tmp files.
   await audioFile.mv(originalWithExtensionAudioPath);
 
-  const [ audioData, mp3AudioPath ] = await Promise.all([
-    _getAudioData(originalWithExtensionAudioPath),
-    _convertAudioToMp3(originalWithExtensionAudioPath),
-  ]);
+  const mp3AudioPath = await _convertAudioToMp3(originalWithExtensionAudioPath);
+  const audioData = await _getAudioData(mp3AudioPath);
 
   const originalAudioReadStream = fs.createReadStream(originalWithExtensionAudioPath);
   const mp3AudioReadStream = fs.createReadStream(mp3AudioPath);
@@ -43,13 +41,13 @@ async function processAndUploadAudio(audioFile) {
  */
 
 async function _getAudioData(audioFilePath) {
-  return new Promise((resolve, reject) => {
-    const command = 'audiowaveform ' +
-                    `--input-filename ${audioFilePath} ` +
-                    '--output-format json ' +
-                    '--bits 8 ' +
-                    '--zoom 88200';
+  const command = 'audiowaveform ' +
+                  `--input-filename ${audioFilePath} ` +
+                  '--output-format json ' +
+                  '--bits 8 ' +
+                  '--zoom 88200';
 
+  return new Promise((resolve, reject) => {
     exec(command, (error, stdout) => {
       if (error) {
         reject(error);
@@ -71,13 +69,21 @@ async function _getAudioData(audioFilePath) {
 async function _convertAudioToMp3(audioFilePath) {
   const pathData = path.parse(audioFilePath);
   const convertedFilePath  = `${pathData.dir}/${pathData.name}-converted.mp3`;
-  const encoder = new Lame({
-    output: convertedFilePath,
-  }).setFile(audioFilePath);
+  const command = `${ffmpegPath} ` +
+    `-i ${audioFilePath} ` +
+    '-codec:a libmp3lame ' +
+    '-qscale:a 2 ' +
+    convertedFilePath;
 
-  await encoder.encode();
+  return new Promise((resolve, reject) => {
+    exec(command, error => {
+      if (error) {
+        reject(error);
+      }
 
-  return convertedFilePath;
+      resolve(convertedFilePath);
+    });
+  });
 }
 
 /*
