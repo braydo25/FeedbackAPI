@@ -1,3 +1,5 @@
+const UserModel = rootRequire('/models/UserModel');
+
 /*
  * Model Definition
  */
@@ -23,6 +25,12 @@ const TrackCommentModel = database.define('trackComment', {
   time: {
     type: Sequelize.INTEGER.UNSIGNED,
     allowNull: false,
+  },
+}, {
+  scopes: {
+    withUser: {
+      include: [ { model: UserModel.scope('trackUser') } ],
+    },
   },
 });
 

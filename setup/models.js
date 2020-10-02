@@ -16,4 +16,4 @@ TrackCommentModel.belongsTo(UserModel);
 
 UserModel.hasMany(UserDeviceModel);
 
-module.exports = database.sync({ force: true });
+module.exports = database.sync();

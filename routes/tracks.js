@@ -19,7 +19,7 @@ router.get('/', userAuthorize);
 router.get('/', asyncMiddleware(async (request, response) => {
   const { user } = request;
 
-  const tracks = await TrackModel.scope('withGenre').findAll({
+  const tracks = await TrackModel.scope([ 'withGenre', 'withRecentComments', 'withUser' ]).findAll({
     where: { userId: user.id },
   });
 

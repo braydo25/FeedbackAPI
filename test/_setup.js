@@ -192,6 +192,12 @@ before(done => {
       .attach('audio', fs.readFileSync('./test/testSong2.mp3'), 'song.mp3');
     testTrackThree = { ...createdTestTrackThreeResponse.body, ...testTrackThree };
 
+    fatLog('Creating test track comment one...');
+    await chai.request(server)
+      .post(`/tracks/${testTrackOne.id}/comments`)
+      .set('X-Access-Token', testUserTwo.accessToken)
+      .send({ text: 'this is super good way to go!', time: 30 });
+
     done();
   })();
 });

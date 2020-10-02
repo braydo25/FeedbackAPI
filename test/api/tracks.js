@@ -69,10 +69,22 @@ describe('Tracks', () => {
             track.should.have.property('sampleRate');
             track.should.have.property('waveform');
             track.should.have.property('duration');
+
             if (track.genre) {
               track.genre.should.have.property('name');
               track.genre.should.have.property('description');
             }
+
+            track.trackComments.should.be.an('array');
+            track.trackComments.forEach(trackComment => {
+              trackComment.should.have.property('id');
+              trackComment.should.have.property('text');
+              trackComment.should.have.property('time');
+              trackComment.should.have.property('createdAt');
+              trackComment.user.should.have.property('id');
+              trackComment.user.should.have.property('name');
+              trackComment.user.should.have.property('avatarUrl');
+            });
           });
           done();
         });

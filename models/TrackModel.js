@@ -1,4 +1,5 @@
 const GenreModel = rootRequire('/models/GenreModel');
+const TrackCommentModel = rootRequire('/models/TrackCommentModel');
 const UserModel = rootRequire('/models/UserModel');
 
 /*
@@ -68,6 +69,22 @@ const TrackModel = database.define('track', {
   scopes: {
     withGenre: {
       include: [ { model: GenreModel } ],
+    },
+    withRecentComments: {
+      include: [
+        {
+          attributes: [
+            'id',
+            'userId',
+            'text',
+            'time',
+            'createdAt',
+          ],
+          model: TrackCommentModel.scope('withUser'),
+          limit: 2,
+          order: [ [ 'createdAt', 'DESC' ] ],
+        },
+      ],
     },
     withUser: {
       include: [ { model: UserModel.scope('trackUser') } ],
