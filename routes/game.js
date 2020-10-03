@@ -12,9 +12,14 @@ const router = express.Router({
  * GET
  */
 
-//router.get('/', userAuthorize);
+router.get('/', userAuthorize);
 router.get('/', asyncMiddleware(async (request, response) => {
-  const tracks = await TrackModel.scope([ 'withGenre', 'withUser' ]).findAll();
+  const { user } = request;
+  const tracks = await TrackModel.scope([ 'withGenre', 'withUser' ]).findAll({
+    where: {
+      userId: { [Sequelize.Op.ne]: user.id },
+    },
+  });
 
   response.success(tracks);
 }));
