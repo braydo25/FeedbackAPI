@@ -40,7 +40,7 @@ const TrackModel = database.define('track', {
     allowNull: false,
   },
   sampleRate: {
-    type: Sequelize.INTEGER,
+    type: Sequelize.INTEGER.UNSIGNED,
     allowNull: false,
   },
   waveform: {

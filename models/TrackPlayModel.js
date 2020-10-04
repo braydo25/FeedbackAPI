@@ -16,6 +16,10 @@ const TrackPlayModel = database.define('trackPlay', {
     type: Sequelize.INTEGER(10).UNSIGNED,
     allowNull: false,
   },
+  duration: {
+    type: Sequelize.INTEGER.UNSIGNED,
+    allowNull: false,
+  },
 });
 
 /*

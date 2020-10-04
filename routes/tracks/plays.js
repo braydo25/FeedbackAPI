@@ -18,11 +18,13 @@ router.post('/', userAuthorize);
 router.post('/', trackAssociate);
 router.post('/', asyncMiddleware(async (request, response) => {
   const { user, track } = request;
+  const { duration } = request.body;
 
   if (user.id !== track.userId) {
     TrackPlayModel.create({
       userId: user.id,
       trackId: track.id,
+      duration,
     });
   }
 
