@@ -44,7 +44,10 @@ router.post('/', asyncMiddleware(async (request, response) => {
   }
 
   const existingTrackWithAudio = await TrackModel.findOne({
-    where: { checksum: audioFile.md5 },
+    where: {
+      checksum: audioFile.md5,
+      draft: false,
+    },
   });
 
   if (existingTrackWithAudio) {
@@ -79,6 +82,14 @@ router.patch('/', trackAuthorize);
 router.patch('/', asyncMiddleware(async (request, response) => {
   const { track } = request;
   const { genreId, name, description, draft } = request.body;
+
+  if (!genreId && !track.genreId) {
+    throw new Error('A genreId must be provided.');
+  }
+
+  if (!name && !track.name) {
+    throw new Error('A name must be provided.');
+  }
 
   await track.update({
     genreId: genreId || track.genreId,
