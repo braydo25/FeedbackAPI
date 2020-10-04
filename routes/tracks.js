@@ -20,7 +20,10 @@ router.get('/', asyncMiddleware(async (request, response) => {
   const { user } = request;
 
   const tracks = await TrackModel.scope([ 'withGenre', 'withRecentComments', 'withUser' ]).findAll({
-    where: { userId: user.id },
+    where: {
+      userId: user.id,
+      draft: false,
+    },
   });
 
   response.success(tracks);
@@ -33,7 +36,7 @@ router.get('/', asyncMiddleware(async (request, response) => {
 router.post('/', userAuthorize);
 router.post('/', asyncMiddleware(async (request, response) => {
   const { user, files } = request;
-  const { name, description, genreId } = request.body;
+  const { name, description, genreId, draft } = request.body;
   const audioFile = (files && files.audio) ? files.audio : null;
 
   if (!audioFile) {
@@ -61,6 +64,7 @@ router.post('/', asyncMiddleware(async (request, response) => {
     sampleRate: audioData.sampleRate,
     duration: audioData.duration,
     waveform: audioData.waveform,
+    draft,
   });
 
   response.success(track);
@@ -74,12 +78,13 @@ router.patch('/', userAuthorize);
 router.patch('/', trackAuthorize);
 router.patch('/', asyncMiddleware(async (request, response) => {
   const { track } = request;
-  const { genreId, name, description } = request.body;
+  const { genreId, name, description, draft } = request.body;
 
   await track.update({
     genreId: genreId || track.genreId,
     name: name || track.name,
     description: description || track.description,
+    draft: draft !== undefined ? draft : track.draft,
   });
 
   response.success(track);

@@ -18,6 +18,7 @@ router.get('/', asyncMiddleware(async (request, response) => {
   const tracks = await TrackModel.scope([ 'withGenre', 'withUser' ]).findAll({
     where: {
       userId: { [Sequelize.Op.ne]: user.id },
+      draft: false,
     },
   });
 

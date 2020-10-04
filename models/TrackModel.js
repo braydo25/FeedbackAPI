@@ -51,6 +51,10 @@ const TrackModel = database.define('track', {
     type: Sequelize.INTEGER.UNSIGNED,
     allowNull: false,
   },
+  draft: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: true,
+  },
 }, {
   defaultScope: {
     attributes: [

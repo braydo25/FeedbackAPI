@@ -103,6 +103,7 @@ describe('Tracks', () => {
         genreId: 7,
         name: 'this is a name change!',
         description: 'a new description yo',
+        draft: false,
       };
 
       chai.request(server)
