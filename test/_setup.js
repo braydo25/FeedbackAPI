@@ -22,11 +22,13 @@ global.enableTestResponseLogging = true;
 
 
 global.testUserOne = {
+  name: 'NULLTEST',
   email: 'test@test.com',
   password: 'test123456',
 };
 
 global.testUserTwo = {
+  name: 'BOYOYOYO',
   email: 'test2@test2.com',
   password: 'test456789',
 };
@@ -147,21 +149,21 @@ before(done => {
     const createdTestUserOneResponse = await chai.request(server).post('/users').send(testUserOne);
     testUserOne = { ...createdTestUserOneResponse.body, ...testUserOne };
 
-    fatLog('Setting password for test user one...');
+    fatLog('Setting name and password for test user one...');
     await chai.request(server)
       .patch('/users/me')
       .set('X-Access-Token', testUserOne.accessToken)
-      .send({ password: testUserOne.password });
+      .send({ name: testUserOne.name, password: testUserOne.password });
 
     fatLog('Creating global test user two...');
     const createdTestUserTwoResponse = await chai.request(server).post('/users').send(testUserTwo);
     testUserTwo = { ...createdTestUserTwoResponse.body, ...testUserTwo };
 
-    fatLog('Setting password for test user two...');
+    fatLog('Setting name and password for test user two...');
     await chai.request(server)
       .patch('/users/me')
       .set('X-Access-Token', testUserTwo.accessToken)
-      .send({ password: testUserTwo.password });
+      .send({ name: testUserTwo.name, password: testUserTwo.password });
 
     fatLog('Creating global test track one...');
     const createdTestTrackOneResponse = await chai.request(server)
