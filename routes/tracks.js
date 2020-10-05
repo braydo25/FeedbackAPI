@@ -53,13 +53,8 @@ router.patch('/', asyncMiddleware(async (request, response) => {
   const { files } = request;
   const { genreId, name, description } = request.body;
   const audioFile = (files && files.audio) ? files.audio : null;
+  let audioData = null;
   let track = request.track;
-  let data = {
-    ...track.toJSON(),
-    genreId: genreId || track.genreId,
-    name: name || track.name,
-    description: description || track.description,
-  };
 
   if (audioFile && !track.mp3Url) {
     const existingTrackWithAudio = await TrackModel.findOne({
@@ -70,25 +65,38 @@ router.patch('/', asyncMiddleware(async (request, response) => {
       throw new Error('This audio has already been uploaded by you or another user.');
     }
 
-    const audioData = await audioHelpers.processAndUploadAudio(audioFile, true);
-
-    data.checksum = audioFile.md5;
-    data.originalUrl = audioData.originalUrl;
-    data.mp3Url = audioData.mp3Url;
-    data.sampleRate = audioData.sampleRate;
-    data.duration = audioData.duration;
-    data.waveform = audioData.waveform;
-
-    // get freshest track in the event there was another patch during this request.
-    track = await TrackModel.findOne({ where: { id: track.id } });
-    data = { ...track.toJSON(), ...data };
+    audioData = await audioHelpers.processAndUploadAudio(audioFile, true);
   }
+
+  // get freshest track in the event there was another patch during this request.
+  track = (audioData) ? await TrackModel.findOne({
+    where: { id: track.id },
+  }) : track;
+
+  const data = {
+    ...track.toJSON(),
+    ...(audioData ? {
+      checksum: audioFile.md5,
+      originalUrl: audioData.originalUrl,
+      mp3Url: audioData.mp3Url,
+      sampleRate: audioData.sampleRate,
+      duration: audioData.duration,
+      waveform: audioData.waveform,
+    } : {}),
+    genreId: genreId || track.genreId,
+    name: name || track.name,
+    description: description || track.description,
+  };
 
   if (data.name && data.genreId && data.mp3Url) {
     data.draft = false;
   }
 
   await track.update(data);
+
+  track = await TrackModel.scope([ 'withGenre', 'withUser' ]).findOne({
+    where: { id: track.id },
+  });
 
   response.success(track);
 }));
