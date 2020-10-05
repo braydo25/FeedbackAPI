@@ -24,6 +24,7 @@ router.get('/', asyncMiddleware(async (request, response) => {
       userId: user.id,
       draft: false,
     },
+    order: [ [ 'createdAt', 'DESC' ] ],
   });
 
   response.success(tracks);
@@ -49,10 +50,11 @@ router.post('/', asyncMiddleware(async (request, response) => {
 router.patch('/', userAuthorize);
 router.patch('/', trackAuthorize);
 router.patch('/', asyncMiddleware(async (request, response) => {
-  const { track, files } = request;
+  const { files } = request;
   const { genreId, name, description } = request.body;
   const audioFile = (files && files.audio) ? files.audio : null;
-  const data = {
+  let track = request.track;
+  let data = {
     ...track.toJSON(),
     genreId: genreId || track.genreId,
     name: name || track.name,
@@ -76,9 +78,13 @@ router.patch('/', asyncMiddleware(async (request, response) => {
     data.sampleRate = audioData.sampleRate;
     data.duration = audioData.duration;
     data.waveform = audioData.waveform;
+
+    // get freshest track in the event there was another patch during this request.
+    track = await TrackModel.findOne({ where: { id: track.id } });
+    data = { ...track.toJSON(), ...data };
   }
 
-  if (data.name && data.mp3Url) {
+  if (data.name && data.genreId && data.mp3Url) {
     data.draft = false;
   }
 
