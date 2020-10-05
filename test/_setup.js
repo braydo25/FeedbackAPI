@@ -37,20 +37,17 @@ global.testTrackOne = {
   genreId: 14,
   name: 'Fighting Demons (Null Remix)',
   description: 'This was a fun project. I love juice wrlds music and wanted to rework fighting demons.',
-  draft: false,
 };
 
 global.testTrackTwo = {
   genreId: 6,
   name: 'Billie Eilish - you should see me in a crown (IIZI Remix)',
-  draft: false,
 };
 
 global.testTrackThree = {
   genreId: 6,
   name: 'Alison Wonderland x Naderi - Shape Of U (Cover)',
   description: '"This is one of my favorite tracks and I really wanted to remix it, but Ed Sheeran didn\'t reply to my twitter when I asked to remix it! So then Naderi and I decided to cover it when I was in Australia with him. It was really fun to recreate and I hope it makes you as happy as it does me." - Alison Wonderland',
-  draft: false,
 };
 
 /*
@@ -171,34 +168,47 @@ before(done => {
     fatLog('Creating global test track one...');
     const createdTestTrackOneResponse = await chai.request(server)
       .post('/tracks')
+      .set('X-Access-Token', testUserOne.accessToken);
+    testTrackOne = { ...createdTestTrackOneResponse.body, ...testTrackOne };
+
+    fatLog('Updating globl test track one...');
+    await chai.request(server)
+      .patch(`/tracks/${testTrackOne.id}`)
       .set('X-Access-Token', testUserOne.accessToken)
       .field('genreId', testTrackOne.genreId)
       .field('name', testTrackOne.name)
       .field('description', testTrackOne.description)
-      .field('draft', testTrackOne.draft)
       .attach('audio', fs.readFileSync('./test/song.mp3'), 'song.mp3');
-    testTrackOne = { ...createdTestTrackOneResponse.body, ...testTrackOne };
+
 
     fatLog('Creating global test track two...');
     const createdTestTrackTwoResponse = await chai.request(server)
       .post('/tracks')
+      .set('X-Access-Token', testUserOne.accessToken);
+    testTrackTwo = { ...createdTestTrackTwoResponse.body, ...testTrackTwo };
+
+    fatLog('Updating global test track two...');
+    await chai.request(server)
+      .patch(`/tracks/${testTrackTwo.id}`)
       .set('X-Access-Token', testUserOne.accessToken)
       .field('genreId', testTrackTwo.genreId)
       .field('name', testTrackTwo.name)
-      .field('draft', testTrackTwo.draft)
       .attach('audio', fs.readFileSync('./test/testSong1.mp3'), 'song.mp3');
-    testTrackTwo = { ...createdTestTrackTwoResponse.body, ...testTrackTwo };
 
     fatLog('Creating global test track three...');
     const createdTestTrackThreeResponse = await chai.request(server)
       .post('/tracks')
+      .set('X-Access-Token', testUserOne.accessToken);
+    testTrackThree = { ...createdTestTrackThreeResponse.body, ...testTrackThree };
+
+    fatLog('Updating global test track three...');
+    await chai.request(server)
+      .patch(`/tracks/${testTrackThree.id}`)
       .set('X-Access-Token', testUserOne.accessToken)
       .field('genreId', testTrackThree.genreId)
       .field('name', testTrackThree.name)
       .field('description', testTrackThree.description)
-      .field('draft', testTrackThree.draft)
       .attach('audio', fs.readFileSync('./test/testSong2.mp3'), 'song.mp3');
-    testTrackThree = { ...createdTestTrackThreeResponse.body, ...testTrackThree };
 
     fatLog('Creating test track comment one...');
     await chai.request(server)

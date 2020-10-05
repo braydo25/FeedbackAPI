@@ -9,35 +9,15 @@ describe('Tracks', () => {
    */
 
   describe('POST /tracks', () => {
-    it('200s with created track when provided audio file', done => {
+    it('200s with created track', done => {
       chai.request(server)
         .post('/tracks')
         .set('X-Access-Token', testUserOne.accessToken)
-        .attach('audio', fs.readFileSync('./test/song2.mp3'), 'song.mp3')
         .end((error, response) => {
           helpers.logExampleResponse(response);
           response.should.have.status(200);
-          response.body.should.be.an('object');
-          response.body.checksum.should.be.a('string');
-          response.body.originalUrl.should.be.a('string');
-          response.body.mp3Url.should.be.a('string');
-          response.body.sampleRate.should.be.a('number');
-          response.body.duration.should.be.a('number');
-          response.body.waveform.should.be.an('array');
-          response.body.waveform.length.should.be.at.least(1);
+          response.body.id.should.be.a('number');
           scopedTrack = response.body;
-          done();
-        });
-    });
-
-    it('400s when provided duplicate audio file', done => {
-      chai.request(server)
-        .post('/tracks')
-        .set('X-Access-Token', testUserOne.accessToken)
-        .attach('audio', fs.readFileSync('./test/song2.mp3'), 'song.mp3')
-        .end((error, response) => {
-          helpers.logExampleResponse(response);
-          response.should.have.status(400);
           done();
         });
     });
@@ -103,7 +83,6 @@ describe('Tracks', () => {
         genreId: 7,
         name: 'this is a name change!',
         description: 'a new description yo',
-        draft: false,
       };
 
       chai.request(server)
@@ -118,6 +97,45 @@ describe('Tracks', () => {
           response.body.name.should.equal(fields.name);
           response.body.description.should.equal(fields.description);
           done();
+        });
+    });
+
+    it('200s with updated track when provided audio file', done => {
+      chai.request(server)
+        .patch(`/tracks/${scopedTrack.id}`)
+        .set('X-Access-Token', testUserOne.accessToken)
+        .attach('audio', fs.readFileSync('./test/song2.mp3'), 'song.mp3')
+        .end((error, response) => {
+          helpers.logExampleResponse(response);
+          response.should.have.status(200);
+          response.body.should.be.an('object');
+          response.body.checksum.should.be.a('string');
+          response.body.originalUrl.should.be.a('string');
+          response.body.mp3Url.should.be.a('string');
+          response.body.sampleRate.should.be.a('number');
+          response.body.duration.should.be.a('number');
+          response.body.waveform.should.be.an('array');
+          response.body.waveform.length.should.be.at.least(1);
+          done();
+        });
+    });
+
+    it('400s when provided duplicate audio file', done => {
+      chai.request(server)
+        .post('/tracks')
+        .set('X-Access-Token', testUserOne.accessToken)
+        .end((error, response) => {
+          response.should.have.status(200);
+
+          chai.request(server)
+            .patch(`/tracks/${response.body.id}`)
+            .set('X-Access-Token', testUserOne.accessToken)
+            .attach('audio', fs.readFileSync('./test/song2.mp3'), 'song.mp3')
+            .end((error, response) => {
+              helpers.logExampleResponse(response);
+              response.should.have.status(400);
+              done();
+            });
         });
     });
 

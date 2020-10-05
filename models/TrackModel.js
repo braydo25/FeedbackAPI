@@ -29,30 +29,25 @@ const TrackModel = database.define('track', {
   },
   originalUrl: {
     type: Sequelize.STRING,
-    allowNull: false,
   },
   mp3Url: {
     type: Sequelize.STRING,
-    allowNull: false,
   },
   checksum: {
     type: Sequelize.STRING,
-    allowNull: false,
   },
   sampleRate: {
     type: Sequelize.INTEGER.UNSIGNED,
-    allowNull: false,
   },
   waveform: {
     type: Sequelize.JSON,
-    allowNull: false,
   },
   duration: {
     type: Sequelize.INTEGER.UNSIGNED,
-    allowNull: false,
   },
   draft: {
     type: Sequelize.BOOLEAN,
+    allowNull: false,
     defaultValue: true,
   },
 }, {
