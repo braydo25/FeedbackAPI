@@ -37,13 +37,13 @@ const UserModel = database.define('user', {
   },
 }, {
   scopes: {
-    trackUser: {
+    trackUser: () => ({
       attributes: [
         'id',
         'avatarUrl',
         'name',
       ],
-    },
+    }),
   },
 });
 

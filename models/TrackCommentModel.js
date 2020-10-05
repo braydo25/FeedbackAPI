@@ -1,5 +1,3 @@
-const UserModel = rootRequire('/models/UserModel');
-
 /*
  * Model Definition
  */
@@ -28,9 +26,12 @@ const TrackCommentModel = database.define('trackComment', {
   },
 }, {
   scopes: {
-    withUser: {
-      include: [ { model: UserModel.scope('trackUser') } ],
-    },
+    withTrack: () => ({
+      include: [ database.models.track.unscoped().scope('minimal') ],
+    }),
+    withUser: () => ({
+      include: [ database.models.user.scope('trackUser') ],
+    }),
   },
 });
 

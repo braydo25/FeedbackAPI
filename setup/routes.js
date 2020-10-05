@@ -2,6 +2,7 @@ const devicesRouter = rootRequire('/routes/devices');
 const gameRouter = rootRequire('/routes/game');
 const genresRouter = rootRequire('/routes/genres');
 const healthRouter = rootRequire('/routes/health');
+const notificationsRouter = rootRequire('/routes/notifications');
 const scraperRouter = rootRequire('/routes/scraper');
 const tracksRouter = rootRequire('/routes/tracks');
 const trackCommentsRouter = rootRequire('/routes/tracks/comments');
@@ -14,6 +15,7 @@ module.exports = app => {
   app.use('/game', gameRouter);
   app.use('/genres', genresRouter);
   app.use('/health', healthRouter);
+  app.use('/notifications', notificationsRouter);
   app.use('/scraper', scraperRouter);
   app.use('/tracks/:trackId?', tracksRouter);
   app.use('/tracks/:trackId/comments/:trackCommentId?', trackCommentsRouter);

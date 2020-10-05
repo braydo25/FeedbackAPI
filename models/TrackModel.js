@@ -1,7 +1,3 @@
-const GenreModel = rootRequire('/models/GenreModel');
-const TrackCommentModel = rootRequire('/models/TrackCommentModel');
-const UserModel = rootRequire('/models/UserModel');
-
 /*
  * Model Definition
  */
@@ -66,10 +62,13 @@ const TrackModel = database.define('track', {
     ],
   },
   scopes: {
-    withGenre: {
-      include: [ { model: GenreModel } ],
-    },
-    withRecentComments: {
+    minimal: () => ({
+      attributes: [ 'id', 'name', 'mp3Url' ],
+    }),
+    withGenre: () => ({
+      include: [ database.models.genre ],
+    }),
+    withRecentComments: () => ({
       include: [
         {
           attributes: [
@@ -79,15 +78,15 @@ const TrackModel = database.define('track', {
             'time',
             'createdAt',
           ],
-          model: TrackCommentModel.scope('withUser'),
+          model: database.models.trackComment.scope('withUser'),
           limit: 2,
           order: [ [ 'createdAt', 'DESC' ] ],
         },
       ],
-    },
-    withUser: {
-      include: [ { model: UserModel.scope('trackUser') } ],
-    },
+    }),
+    withUser: () => ({
+      include: [ { model: database.models.user.scope('trackUser') } ],
+    }),
   },
 });
 

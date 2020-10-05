@@ -2,6 +2,7 @@
  * Route: /tracks/:trackId/comments/:trackCommentId?
  */
 
+const NotificationModel = rootRequire('/models/NotificationModel');
 const TrackCommentModel = rootRequire('/models/TrackCommentModel');
 const userAuthorize = rootRequire('/middlewares/users/authorize');
 const trackAssociate = rootRequire('/middlewares/tracks/associate');
@@ -30,6 +31,11 @@ router.post('/', asyncMiddleware(async (request, response) => {
     userId: user.id,
     text,
     time,
+  });
+
+  NotificationModel.create({
+    userId: track.userId,
+    trackCommentId: trackComment.id,
   });
 
   response.success(trackComment);
