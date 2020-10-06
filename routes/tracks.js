@@ -18,6 +18,22 @@ const router = express.Router({
 router.get('/', userAuthorize);
 router.get('/', asyncMiddleware(async (request, response) => {
   const { user } = request;
+  const { trackId } = request.params;
+
+  if (trackId) {
+    const track = await TrackModel.scope([ 'withGenre', 'withUser' ]).findOne({
+      where: {
+        id: trackId,
+        userId: user.id,
+      },
+    });
+
+    if (!track) {
+      throw new Error('This track does not exist.');
+    }
+
+    return response.success(track);
+  }
 
   const tracks = await TrackModel.scope([ 'withGenre', 'withRecentComments', 'withUser' ]).findAll({
     where: {

@@ -51,6 +51,36 @@ describe('Track Comments', () => {
   });
 
   /*
+   * GET
+   */
+
+  describe('GET /tracks/:trackId/comments', () => {
+    it('200s with an array of trackComments', done => {
+      chai.request(server)
+        .get(`/tracks/${testTrackOne.id}/comments`)
+        .set('X-Access-Token', testUserOne.accessToken)
+        .end((error, response) => {
+          helpers.logExampleResponse(response);
+          response.should.have.status(200);
+          response.body.should.be.an('array');
+          response.body.length.should.be.at.least(1);
+          response.body.forEach(trackComment => {
+            trackComment.id.should.be.a('number');
+            trackComment.text.should.be.a('string');
+            trackComment.time.should.be.a('number');
+            trackComment.user.should.be.an('object');
+            trackComment.user.id.should.be.a('number');
+            trackComment.user.should.have.property('avatarUrl');
+            trackComment.user.name.should.be.a('string');
+          });
+          done();
+        });
+    });
+
+    helpers.it401sWhenUserAuthorizationIsInvalid('get', '/tracks/1/comments');
+  });
+
+  /*
    * DELETE
    */
 

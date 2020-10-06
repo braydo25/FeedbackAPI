@@ -6,11 +6,28 @@ const NotificationModel = rootRequire('/models/NotificationModel');
 const TrackCommentModel = rootRequire('/models/TrackCommentModel');
 const userAuthorize = rootRequire('/middlewares/users/authorize');
 const trackAssociate = rootRequire('/middlewares/tracks/associate');
+const trackAuthorize = rootRequire('/middlewares/tracks/authorize');
 const trackCommentAuthorize = rootRequire('/middlewares/tracks/comments/authorize');
 
 const router = express.Router({
   mergeParams: true,
 });
+
+/*
+ * GET
+ */
+
+router.get('/', userAuthorize);
+router.get('/', trackAuthorize);
+router.get('/', asyncMiddleware(async (request, response) => {
+  const { track } = request;
+
+  const trackComments = await TrackCommentModel.scope('withUser').findAll({
+    where: { trackId: track.id },
+  });
+
+  response.success(trackComments);
+}));
 
 /*
  * POST

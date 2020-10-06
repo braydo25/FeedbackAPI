@@ -49,6 +49,7 @@ describe('Tracks', () => {
             track.should.have.property('sampleRate');
             track.should.have.property('waveform');
             track.should.have.property('duration');
+            track.should.have.property('user');
 
             if (track.genre) {
               track.genre.should.have.property('name');
@@ -66,6 +67,28 @@ describe('Tracks', () => {
               trackComment.user.should.have.property('avatarUrl');
             });
           });
+          done();
+        });
+    });
+
+    it('200s with track when provided trackId', done => {
+      chai.request(server)
+        .get(`/tracks/${testTrackOne.id}`)
+        .set('X-Access-Token', testUserOne.accessToken)
+        .end((error, response) => {
+          helpers.logExampleResponse(response);
+          response.should.have.status(200);
+          response.body.should.be.an('object');
+          response.body.should.have.property('name');
+          response.body.should.have.property('description');
+          response.body.should.have.property('originalUrl');
+          response.body.should.have.property('mp3Url');
+          response.body.should.have.property('checksum');
+          response.body.should.have.property('sampleRate');
+          response.body.should.have.property('waveform');
+          response.body.should.have.property('duration');
+          response.body.should.have.property('genre');
+          response.body.should.have.property('user');
           done();
         });
     });
