@@ -23,6 +23,28 @@ const TrackPlayModel = database.define('trackPlay', {
 });
 
 /*
+ * Hooks
+ */
+
+TrackPlayModel.addHook('afterCreate', async (trackPlay, options) => {
+  const TrackModel = database.models.track;
+
+  await TrackModel.update({ totalPlays: database.literal('totalPlays + 1') }, {
+    where: { id: trackPlay.trackId },
+    transaction: options.transaction,
+  });
+});
+
+TrackPlayModel.addHook('afterDestroy', async (trackPlay, options) => {
+  const TrackModel = database.models.track;
+
+  await TrackModel.update({ totalPlays: database.literal('totalPlays - 1') }, {
+    where: { id: trackPlay.trackId },
+    transaction: options.transaction,
+  });
+});
+
+/*
  * Export
  */
 

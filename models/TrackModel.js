@@ -41,6 +41,16 @@ const TrackModel = database.define('track', {
   duration: {
     type: Sequelize.INTEGER.UNSIGNED,
   },
+  totalComments: {
+    type: Sequelize.INTEGER.UNSIGNED,
+    allowNull: false,
+    defaultValue: 0,
+  },
+  totalPlays: {
+    type: Sequelize.INTEGER.UNSIGNED,
+    allowNull: false,
+    defaultValue: 0,
+  },
   draft: {
     type: Sequelize.BOOLEAN,
     allowNull: false,

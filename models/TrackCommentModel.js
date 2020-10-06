@@ -36,6 +36,28 @@ const TrackCommentModel = database.define('trackComment', {
 });
 
 /*
+ * Hooks
+ */
+
+TrackCommentModel.addHook('afterCreate', async (trackComment, options) => {
+  const TrackModel = database.models.track;
+
+  await TrackModel.update({ totalComments: database.literal('totalComments + 1') }, {
+    where: { id: trackComment.trackId },
+    transaction: options.transaction,
+  });
+});
+
+TrackCommentModel.addHook('afterDestroy', async (trackComment, options) => {
+  const TrackModel = database.models.track;
+
+  await TrackModel.update({ totalComments: database.literal('totalComments - 1') }, {
+    where: { id: trackComment.trackId },
+    transaction: options.transaction,
+  });
+});
+
+/*
  * Export
  */
 

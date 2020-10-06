@@ -24,6 +24,7 @@ router.get('/', asyncMiddleware(async (request, response) => {
 
   const trackComments = await TrackCommentModel.scope('withUser').findAll({
     where: { trackId: track.id },
+    order: [ [ 'createdAt', 'DESC' ] ],
   });
 
   response.success(trackComments);
