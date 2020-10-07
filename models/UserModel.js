@@ -32,6 +32,11 @@ const UserModel = database.define('user', {
   name: {
     type: Sequelize.STRING,
   },
+  exp: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    defaultValue: 0,
+  },
   preferredGenreIds: {
     type: Sequelize.JSON,
   },

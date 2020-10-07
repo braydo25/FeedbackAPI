@@ -1,3 +1,5 @@
+const levelsConfig = rootRequire('/config/levels');
+
 /*
  * Model Definition
  */
@@ -41,18 +43,30 @@ const TrackCommentModel = database.define('trackComment', {
 
 TrackCommentModel.addHook('afterCreate', async (trackComment, options) => {
   const TrackModel = database.models.track;
+  const UserModel = database.models.user;
 
   await TrackModel.update({ totalComments: database.literal('totalComments + 1') }, {
     where: { id: trackComment.trackId },
+    transaction: options.transaction,
+  });
+
+  await UserModel.update({ exp: database.literal(`exp + ${levelsConfig.commentExp}`) }, {
+    where: { id: trackComment.userId },
     transaction: options.transaction,
   });
 });
 
 TrackCommentModel.addHook('afterDestroy', async (trackComment, options) => {
   const TrackModel = database.models.track;
+  const UserModel = database.models.user;
 
   await TrackModel.update({ totalComments: database.literal('totalComments - 1') }, {
     where: { id: trackComment.trackId },
+    transaction: options.transaction,
+  });
+
+  await UserModel.update({ exp: database.literal(`exp - ${levelsConfig.commentExp}`) }, {
+    where: { id: trackComment.userId },
     transaction: options.transaction,
   });
 });
