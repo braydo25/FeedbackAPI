@@ -49,6 +49,8 @@ describe('Tracks', () => {
             track.should.have.property('sampleRate');
             track.should.have.property('waveform');
             track.should.have.property('duration');
+            track.should.have.property('totalComments');
+            track.should.have.property('totalPlays');
             track.should.have.property('user');
 
             if (track.genre) {

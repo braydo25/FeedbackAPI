@@ -69,6 +69,8 @@ const TrackModel = database.define('track', {
       'sampleRate',
       'waveform',
       'duration',
+      'totalComments',
+      'totalPlays',
     ],
   },
   scopes: {
