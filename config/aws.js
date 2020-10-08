@@ -11,3 +11,10 @@ module.exports.region = process.env.AWS_REGION;
  */
 
 module.exports.s3FileUploadsBucket = process.env.AWS_S3_FILE_UPLOADS_BUCKET;
+
+/*
+ * SNS
+ */
+
+module.exports.snsFcmPlatformApplicationArn = process.env.AWS_SNS_FCM_PLATFORM_APPLICATION_ARN;
+module.exports.snsApnsPlatformApplicationArn = process.env.AWS_SNS_APNS_PLATFORM_APPLICATION_ARN;

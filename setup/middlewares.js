@@ -2,6 +2,7 @@ const compression = require('compression');
 const bodyParser = require('body-parser');
 const fileUpload = require('express-fileupload');
 const logging = rootRequire('/middlewares/logging');
+const multipartJson = rootRequire('/middlewares/multipartJson');
 const serverConfig = rootRequire('/config/server');
 
 module.exports = app => {
@@ -22,5 +23,6 @@ module.exports = app => {
     tempFileDir: '/tmp/',
   }));
 
+  app.use(multipartJson);
   app.use(logging);
 };

@@ -89,15 +89,21 @@ describe('Users', () => {
     });
 
     it('200s with updated user object when provided avatar image', done => {
+      const fields = {
+        preferredGenreIds: [ 1, 4, 2 ],
+      };
+
       chai.request(server)
         .patch('/users/me')
         .set('X-Access-Token', testUserOne.accessToken)
+        .field('preferredGenreIds', fields.preferredGenreIds)
         .attach('avatar', fs.readFileSync('./test/profile.jpg'), 'avatar.jpg')
         .end((error, response) => {
           helpers.logExampleResponse(response);
           response.should.have.status(200);
           response.body.should.be.an('object');
           response.body.avatarUrl.should.not.equal(null);
+          response.body.preferredGenreIds.should.deep.equal(fields.preferredGenreIds);
           done();
         });
     });

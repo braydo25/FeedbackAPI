@@ -22,7 +22,7 @@ router.put('/', asyncMiddleware(async (request, response) => {
     : request.connection.remoteAddress;
 
   if (!uuid) {
-    throw new Error('idfv must be provided.');
+    throw new Error('uuid must be provided.');
   }
 
   const existingUserDevice = await UserDeviceModel.findOne({ where: { uuid } });
