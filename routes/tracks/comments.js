@@ -4,6 +4,7 @@
 
 const NotificationModel = rootRequire('/models/NotificationModel');
 const TrackCommentModel = rootRequire('/models/TrackCommentModel');
+const UserDeviceModel = rootRequire('/models/UserDeviceModel');
 const userAuthorize = rootRequire('/middlewares/users/authorize');
 const trackAssociate = rootRequire('/middlewares/tracks/associate');
 const trackAuthorize = rootRequire('/middlewares/tracks/authorize');
@@ -54,6 +55,12 @@ router.post('/', asyncMiddleware(async (request, response) => {
   NotificationModel.create({
     userId: track.userId,
     trackCommentId: trackComment.id,
+  });
+
+  UserDeviceModel.sendPushNotificationForUserId({
+    userId: track.userId,
+    title: track.name,
+    message: `${user.name}: ${text}`,
   });
 
   response.success(trackComment);

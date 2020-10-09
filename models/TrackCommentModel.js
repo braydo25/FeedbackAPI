@@ -21,6 +21,18 @@ const TrackCommentModel = database.define('trackComment', {
   text: {
     type: Sequelize.TEXT,
     allowNull: false,
+    validate: {
+      minLength(value) {
+        if (value.length < 20) {
+          throw new Error('Your feedback must be at least 20 characters long.');
+        }
+      },
+      checkSpam(value) {
+        if (value.split(' ').length < 4 || (new Set(value)).size < 5) {
+          throw new Error("Spamming doesn't help others.. Don't spam. Continuing may result in a ban.");
+        }
+      },
+    },
   },
   time: {
     type: Sequelize.INTEGER.UNSIGNED,
