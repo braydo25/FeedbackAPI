@@ -108,6 +108,22 @@ describe('Users', () => {
         });
     });
 
+    it('400s when provided preferredGenreIds that are not integers', done => {
+      const fields ={
+        preferredGenreIds: [ '1', '2', '3' ],
+      };
+
+      chai.request(server)
+        .patch('/users/me')
+        .set('X-Access-Token', testUserOne.accessToken)
+        .send(fields)
+        .end((error, response) => {
+          helpers.logExampleResponse(response);
+          response.should.have.status(400);
+          done();
+        });
+    });
+
     helpers.it401sWhenUserAuthorizationIsInvalid('patch', '/users/me');
   });
 });

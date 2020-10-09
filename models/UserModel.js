@@ -39,6 +39,19 @@ const UserModel = database.define('user', {
   },
   preferredGenreIds: {
     type: Sequelize.JSON,
+    validate: {
+      isIntegerArray(value) {
+        if (!Array.isArray(value)) {
+          throw new Error('Invalid preferred genre ids provided.');
+        }
+
+        value.forEach(genreId => {
+          if (!Number.isInteger(genreId)) {
+            throw new Error('Genre ids must be integers.');
+          }
+        });
+      },
+    },
   },
 }, {
   scopes: {
