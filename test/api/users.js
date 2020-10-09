@@ -72,6 +72,7 @@ describe('Users', () => {
         name: 'new name boiii',
         password: '123abcdef',
         preferredGenreIds: [ 1, 5, 7 ],
+        viewedNotificationsAt: new Date(),
       };
 
       chai.request(server)

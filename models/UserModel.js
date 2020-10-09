@@ -53,6 +53,11 @@ const UserModel = database.define('user', {
       },
     },
   },
+  viewedNotificationsAt: {
+    type: Sequelize.DATE,
+    allowNull: false,
+    defaultValue: Sequelize.NOW,
+  },
 }, {
   scopes: {
     trackUser: () => ({

@@ -44,12 +44,13 @@ router.post('/', asyncMiddleware(async (request, response) => {
 router.patch('/me', userAuthorize);
 router.patch('/me', asyncMiddleware(async (request, response) => {
   const { user, files } = request;
-  const { name, password, preferredGenreIds } = request.body;
+  const { name, password, preferredGenreIds, viewedNotificationsAt } = request.body;
   const avatarFile = (files && files.avatar) ? files.avatar : null;
   const data = {
     name: name || user.name,
     password,
     preferredGenreIds: preferredGenreIds || user.preferredGenreIds,
+    viewedNotificationsAt: viewedNotificationsAt || user.viewedNotificationsAt,
   };
 
   if (avatarFile && avatarFile.mimetype.includes('image/')) {
