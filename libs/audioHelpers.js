@@ -45,7 +45,7 @@ async function _getAudioData(audioFilePath) {
                   `--input-filename ${audioFilePath} ` +
                   '--output-format json ' +
                   '--bits 8 ' +
-                  '--zoom 88200';
+                  '--zoom 44100';
 
   return new Promise((resolve, reject) => {
     exec(command, (error, stdout) => {
@@ -58,7 +58,7 @@ async function _getAudioData(audioFilePath) {
         return (Math.abs(wave) > waveformPeak) ? Math.abs(wave) : waveformPeak;
       }, 0);
 
-      data.duration = data.length * (88200 / data.sample_rate);
+      data.duration = data.length * (44100 / data.sample_rate);
       data.data = data.data.map(wave => Math.floor((Math.abs(wave) / waveformPeak) * 100));
 
       resolve(data);

@@ -53,6 +53,11 @@ const UserModel = database.define('user', {
       },
     },
   },
+  totalTracks: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    defaultValue: 0,
+  },
   viewedNotificationsAt: {
     type: Sequelize.DATE,
     allowNull: false,

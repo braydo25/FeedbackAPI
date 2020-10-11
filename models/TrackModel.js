@@ -103,6 +103,28 @@ const TrackModel = database.define('track', {
 });
 
 /*
+ * Hooks
+ */
+
+TrackModel.addHook('afterCreate', async (track, options) => {
+  const UserModel = database.models.user;
+
+  await UserModel.update({ totalTracks: database.literal('totalTracks + 1') }, {
+    where: { id: track.userId },
+    transaction: options.transaction,
+  });
+});
+
+TrackModel.addHook('afterDestroy', async (track, options) => {
+  const UserModel = database.models.user;
+
+  await UserModel.update({ totalTracks: database.literal('totalTracks - 1') }, {
+    where: { id: track.userId },
+    transaction: options.transaction,
+  });
+});
+
+/*
  * Export
  */
 
