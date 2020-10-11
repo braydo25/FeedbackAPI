@@ -15,14 +15,32 @@ const router = express.Router({
 router.get('/', userAuthorize);
 router.get('/', asyncMiddleware(async (request, response) => {
   const { user } = request;
-  const tracks = await TrackModel.scope([ 'withGenre', 'withUser' ]).findAll({
-    where: {
-      userId: { [Sequelize.Op.ne]: user.id },
-      draft: false,
-    },
-  });
+  const options = {
+    where: [
+      {
+        genreId: user.preferredGenreIds,
+        userId: { [Sequelize.Op.ne]: user.id },
+        draft: false,
+      },
+      database.literal(`(track.id NOT IN (SELECT tp.trackId from trackPlays tp WHERE tp.userId = ${user.id}))`),
+    ],
+    order: [
+      database.literal('-LOG(1.0 - RAND()) / (user.exp + 1)'),
+    ],
+    limit: 10,
+  };
 
-  response.success(tracks);
+  const preferredTracks = await TrackModel.scope([ 'withGenre', 'withUser' ]).findAll(options);
+
+  if (preferredTracks.length) {
+    return response.success(preferredTracks);
+  }
+
+  delete options.where[0].genreId;
+
+  const allTracks = await TrackModel.scope([ 'withGenre', 'withUser' ]).findAll(options);
+
+  response.success(allTracks);
 }));
 
 /*
