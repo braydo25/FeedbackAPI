@@ -71,6 +71,7 @@ const TrackModel = database.define('track', {
       'duration',
       'totalComments',
       'totalPlays',
+      'createdAt',
     ],
   },
   scopes: {
