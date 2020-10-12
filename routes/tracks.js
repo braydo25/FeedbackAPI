@@ -109,7 +109,9 @@ router.patch('/', asyncMiddleware(async (request, response) => {
     data.draft = false;
   }
 
-  const genre = (data.genreId) ? await GenreModel.findOne({ id: data.genreId }) : null;
+  const genre = (data.genreId) ? await GenreModel.findOne({
+    where: { id: data.genreId },
+  }) : null;
 
   await track.update(data, {
     setDataValues: {
