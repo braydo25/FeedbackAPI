@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const { exec } = require('child_process');
+const audiowaveformPath = (process.env.NODE_ENV === 'production') ? `${__dirname}/../bin/audiowaveform` : 'audiowaveform';
 const ffmpegPath = require('ffmpeg-static');
 const uuidv4 = require('uuid').v4;
 const awsHelpers = rootRequire('/libs/awsHelpers');
@@ -41,7 +42,7 @@ async function processAndUploadAudio(audioFile) {
  */
 
 async function _getAudioData(audioFilePath) {
-  const command = 'audiowaveform ' +
+  const command = `${audiowaveformPath} ` +
                   `--input-filename ${audioFilePath} ` +
                   '--output-format json ' +
                   '--bits 8 ' +

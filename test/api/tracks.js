@@ -121,6 +121,8 @@ describe('Tracks', () => {
           response.body.genreId.should.equal(fields.genreId);
           response.body.name.should.equal(fields.name);
           response.body.description.should.equal(fields.description);
+          response.body.genre.should.be.an('object');
+          response.body.user.should.be.an('object');
           done();
         });
     });
@@ -141,6 +143,8 @@ describe('Tracks', () => {
           response.body.duration.should.be.a('number');
           response.body.waveform.should.be.an('array');
           response.body.waveform.length.should.be.at.least(1);
+          response.body.genre.should.be.an('object');
+          response.body.user.should.be.an('object');
           done();
         });
     });

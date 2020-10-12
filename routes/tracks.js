@@ -3,6 +3,7 @@
  */
 
 const TrackModel = rootRequire('/models/TrackModel');
+const GenreModel = rootRequire('/models/GenreModel');
 const userAuthorize = rootRequire('/middlewares/users/authorize');
 const trackAuthorize = rootRequire('/middlewares/tracks/authorize');
 const audioHelpers = rootRequire('/libs/audioHelpers');
@@ -66,7 +67,7 @@ router.post('/', asyncMiddleware(async (request, response) => {
 router.patch('/', userAuthorize);
 router.patch('/', trackAuthorize);
 router.patch('/', asyncMiddleware(async (request, response) => {
-  const { files } = request;
+  const { user, files } = request;
   const { genreId, name, description } = request.body;
   const audioFile = (files && files.audio) ? files.audio : null;
   let audioData = null;
@@ -108,10 +109,17 @@ router.patch('/', asyncMiddleware(async (request, response) => {
     data.draft = false;
   }
 
-  await track.update(data);
+  const genre = (data.genreId) ? await GenreModel.findOne({ id: data.genreId }) : null;
 
-  track = await TrackModel.scope([ 'withGenre', 'withUser' ]).findOne({
-    where: { id: track.id },
+  await track.update(data, {
+    setDataValues: {
+      genre,
+      user: {
+        id: user.id,
+        avatarUrl: user.avatarUrl,
+        name: user.name,
+      },
+    },
   });
 
   response.success(track);
