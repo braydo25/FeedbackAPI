@@ -109,7 +109,7 @@ UserDeviceModel.prototype.sendPushNotification = function({ title, message, data
       }),
       TargetArn: this.apnsSnsArn,
       MessageStructure: 'json',
-    }).promise().catch(err => { /* noop */ });
+    }).promise().catch(error => { /* noop */ });
   }
 
   if (this.fcmSnsArn) {
@@ -117,16 +117,12 @@ UserDeviceModel.prototype.sendPushNotification = function({ title, message, data
       Message: JSON.stringify({
         default: message,
         GCM: JSON.stringify({
-          notification: {
-            title,
-            body: message,
-          },
           data: { title, message, data },
         }),
       }),
       TargetArn: this.fcmSnsArn,
       MessageStructure: 'json',
-    }).promise().catch(err => { /* noop */});
+    }).promise().catch(error => { /* noop */ });
   }
 };
 
