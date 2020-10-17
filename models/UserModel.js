@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt');
+const awsHelpers = rootRequire('/libs/awsHelpers');
 
 /*
  * Model Definition
@@ -81,6 +82,7 @@ const UserModel = database.define('user', {
 
 UserModel.addHook('beforeCreate', hashPassword);
 UserModel.addHook('beforeUpdate', hashPassword);
+UserModel.addHook('afterCreate', sendEmails);
 
 async function hashPassword(instance) {
   if (!instance.changed('password') || !instance.password) {
@@ -92,6 +94,18 @@ async function hashPassword(instance) {
   }
 
   instance.set('password', await bcrypt.hash(instance.password, 8));
+}
+
+async function sendEmails(instance) {
+  awsHelpers.sendEmail({
+    toEmail: instance.email,
+    fromEmail: 'Soundhouse@soundhouseapp.com',
+    subject: 'Welcome to Soundhouse! Join our Discord community!',
+    bodyHtml: 'Welcome to Soundhouse, we’re glad you’ve joined!<br /><br />' +
+              'We believe no matter your musical skill level or fanbase size, you deserve an opportunity for your music to be heard, an opportunity to improve, and an opportunity to grow as an artist.<br /><br />' +
+              'We’re inviting you to our exclusive community on Discord where you can give feedback and help influence the future of Soundhouse and the features it offers while connecting with other musicians and producers.<br /><br />' +
+              '<a href="https://discord.gg/EqnqwvM">Click Here To Join The Soundhouse Community</a>',
+  });
 }
 
 /*

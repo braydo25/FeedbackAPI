@@ -29,7 +29,36 @@ function logEvent({ event, data }) {
   }));
 }
 
+/*
+ * SES
+ */
 
+function sendEmail({ toEmail, fromEmail, subject, bodyHtml }) {
+  const ses = new aws.SES();
+
+  if (process.env.NODE_ENV === 'local') {
+    return console.log(`Local environment - Not sending email: ${subject}`);
+  }
+
+  ses.sendEmail({
+    Destination: {
+      ToAddresses: [ toEmail ],
+    },
+    Message: {
+      Subject: {
+        Charset: 'UTF-8',
+        Data: subject,
+      },
+      Body: {
+        Html: {
+          Charset: 'UTF-8',
+          Data: bodyHtml,
+        },
+      },
+    },
+    Source: fromEmail,
+  }).promise().catch(error => { /* noop */ });;
+}
 
 /*
  * Export
@@ -38,4 +67,5 @@ function logEvent({ event, data }) {
 module.exports = {
   uploadToS3,
   logEvent,
+  sendEmail,
 };
