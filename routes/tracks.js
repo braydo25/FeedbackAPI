@@ -75,7 +75,10 @@ router.patch('/', asyncMiddleware(async (request, response) => {
 
   if (audioFile && !track.mp3Url) {
     const existingTrackWithAudio = await TrackModel.findOne({
-      where: { checksum: audioFile.md5 },
+      where: {
+        checksum: audioFile.md5,
+        draft: false,
+      },
     });
 
     if (existingTrackWithAudio) {
