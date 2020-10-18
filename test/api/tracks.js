@@ -12,7 +12,7 @@ describe('Tracks', () => {
     it('200s with created track', done => {
       chai.request(server)
         .post('/tracks')
-        .set('X-Access-Token', testUserOne.accessToken)
+        .set('X-Access-Token', testUserTwo.accessToken)
         .end((error, response) => {
           helpers.logExampleResponse(response);
           response.should.have.status(200);
@@ -73,6 +73,24 @@ describe('Tracks', () => {
         });
     });
 
+    it('200s with an array of created tracks for provided user id', done => {
+      chai.request(server)
+        .get('/tracks')
+        .query({ userId: testUserOne.id })
+        .set('X-Access-Token', testUserTwo.accessToken)
+        .end((error, response) => {
+          helpers.logExampleResponse(response);
+          response.should.have.status(200);
+          response.body.should.be.an('array');
+          response.body.length.should.be.at.least(1);
+          response.body.forEach(track => {
+            track.should.be.an('object');
+            track.userId.should.equal(testUserOne.id);
+          });
+          done();
+        });
+    });
+
     it('200s with track when provided trackId', done => {
       chai.request(server)
         .get(`/tracks/${testTrackOne.id}`)
@@ -112,7 +130,7 @@ describe('Tracks', () => {
 
       chai.request(server)
         .patch(`/tracks/${scopedTrack.id}`)
-        .set('X-Access-Token', testUserOne.accessToken)
+        .set('X-Access-Token', testUserTwo.accessToken)
         .send(fields)
         .end((error, response) => {
           helpers.logExampleResponse(response);
@@ -130,7 +148,7 @@ describe('Tracks', () => {
     it('200s with updated track when provided audio file', done => {
       chai.request(server)
         .patch(`/tracks/${scopedTrack.id}`)
-        .set('X-Access-Token', testUserOne.accessToken)
+        .set('X-Access-Token', testUserTwo.accessToken)
         .attach('audio', fs.readFileSync('./test/song2.mp3'), 'song.mp3')
         .end((error, response) => {
           helpers.logExampleResponse(response);
@@ -179,7 +197,7 @@ describe('Tracks', () => {
     it('204s and deletes track', done => {
       chai.request(server)
         .delete(`/tracks/${scopedTrack.id}`)
-        .set('X-Access-Token', testUserOne.accessToken)
+        .set('X-Access-Token', testUserTwo.accessToken)
         .end((error, response) => {
           helpers.logExampleResponse(response);
           response.should.have.status(204);
