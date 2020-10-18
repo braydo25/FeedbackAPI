@@ -66,6 +66,15 @@ const UserModel = database.define('user', {
   },
 }, {
   scopes: {
+    publicUser: () => ({
+      attributes: [
+        'id',
+        'avatarUrl',
+        'name',
+        'exp',
+        'totalTracks',
+      ],
+    }),
     trackUser: () => ({
       attributes: [
         'id',

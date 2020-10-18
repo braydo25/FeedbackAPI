@@ -63,6 +63,29 @@ describe('Users', () => {
   });
 
   /*
+   * GET
+   */
+
+  describe('GET /users/:userId', () => {
+    it ('200s with user object', done => {
+      chai.request(server)
+        .get(`/users/${testUserOne.id}`)
+        .set('X-Access-Token', testUserTwo.accessToken)
+        .end((error, response) => {
+          helpers.logExampleResponse(response);
+          response.should.have.status(200);
+          response.body.id.should.be.a('number');
+          response.body.should.not.have.property('acessToken');
+          response.body.should.have.property('avatarUrl');
+          response.body.should.have.property('name');
+          response.body.should.have.property('exp');
+          response.body.should.have.property('totalTracks');
+          done();
+        });
+    });
+  });
+
+  /*
    * PATCH
    */
 

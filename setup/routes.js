@@ -20,7 +20,7 @@ module.exports = app => {
   app.use('/tracks/:trackId?', tracksRouter);
   app.use('/tracks/:trackId/comments/:trackCommentId?', trackCommentsRouter);
   app.use('/tracks/:trackId/plays', trackPlaysRouter);
-  app.use('/users', usersRouter);
+  app.use('/users/:userId?', usersRouter);
 
   // Handle Various Errors
   app.use((error, request, response, next) => {

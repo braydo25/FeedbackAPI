@@ -19,13 +19,14 @@ const router = express.Router({
 router.get('/', userAuthorize);
 router.get('/', asyncMiddleware(async (request, response) => {
   const { user } = request;
+  const { userId } = request.query;
   const { trackId } = request.params;
 
   if (trackId) {
     const track = await TrackModel.scope([ 'withGenre', 'withUser' ]).findOne({
       where: {
         id: trackId,
-        userId: user.id,
+        userId: userId || user.id,
       },
     });
 
@@ -38,7 +39,7 @@ router.get('/', asyncMiddleware(async (request, response) => {
 
   const tracks = await TrackModel.scope([ 'withGenre', 'withRecentComments', 'withUser' ]).findAll({
     where: {
-      userId: user.id,
+      userId: userId || user.id,
       draft: false,
     },
     order: [ [ 'createdAt', 'DESC' ] ],

@@ -12,6 +12,25 @@ const router = express.Router({
 });
 
 /*
+ * GET
+ */
+
+router.get('/', userAuthorize);
+router.get('/', asyncMiddleware(async (request, response) => {
+  const { userId } = request.params;
+
+  if (!userId) {
+    throw new Error('A user id must be provided.');
+  }
+
+  const user = await UserModel.scope('publicUser').findOne({
+    where: { id: userId },
+  });
+
+  response.success(user);
+}));
+
+/*
  * POST
  */
 
@@ -41,8 +60,8 @@ router.post('/', asyncMiddleware(async (request, response) => {
  * PATCH
  */
 
-router.patch('/me', userAuthorize);
-router.patch('/me', asyncMiddleware(async (request, response) => {
+router.patch('/', userAuthorize);
+router.patch('/', asyncMiddleware(async (request, response) => {
   const { user, files } = request;
   const { name, password, preferredGenreIds, viewedNotificationsAt } = request.body;
   const avatarFile = (files && files.avatar) ? files.avatar : null;
