@@ -24,10 +24,7 @@ router.get('/', asyncMiddleware(async (request, response) => {
 
   if (trackId) {
     const track = await TrackModel.scope([ 'withGenre', 'withUser' ]).findOne({
-      where: {
-        id: trackId,
-        userId: userId || user.id,
-      },
+      where: { id: trackId },
     });
 
     if (!track) {
