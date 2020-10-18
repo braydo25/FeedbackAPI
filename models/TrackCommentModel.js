@@ -24,7 +24,7 @@ const TrackCommentModel = database.define('trackComment', {
     validate: {
       minLength(value) {
         if (value.length < 10) {
-          throw new Error('Your feedback must be at least 20 characters long.');
+          throw new Error('Your feedback must be at least 10 characters long.');
         }
       },
       checkSpam(value) {
