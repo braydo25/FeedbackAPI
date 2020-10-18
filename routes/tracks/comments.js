@@ -7,7 +7,6 @@ const TrackCommentModel = rootRequire('/models/TrackCommentModel');
 const UserDeviceModel = rootRequire('/models/UserDeviceModel');
 const userAuthorize = rootRequire('/middlewares/users/authorize');
 const trackAssociate = rootRequire('/middlewares/tracks/associate');
-const trackAuthorize = rootRequire('/middlewares/tracks/authorize');
 const trackCommentAuthorize = rootRequire('/middlewares/tracks/comments/authorize');
 
 const router = express.Router({
@@ -19,7 +18,7 @@ const router = express.Router({
  */
 
 router.get('/', userAuthorize);
-router.get('/', trackAuthorize);
+router.get('/', trackAssociate);
 router.get('/', asyncMiddleware(async (request, response) => {
   const { track } = request;
 
