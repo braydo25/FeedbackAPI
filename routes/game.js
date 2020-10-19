@@ -26,8 +26,10 @@ router.get('/', asyncMiddleware(async (request, response) => {
     ],
     order: [
       database.literal('-LOG(1.0 - RAND()) / (user.exp + 1)'),
+      [ 'createdAt', 'DESC' ],
     ],
-    limit: 10,
+    group: [ 'track.userId' ],
+    limit: 15,
   };
 
   const preferredTracks = await TrackModel.scope([ 'withGenre', 'withUser' ]).findAll(options);
