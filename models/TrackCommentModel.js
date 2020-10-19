@@ -38,6 +38,11 @@ const TrackCommentModel = database.define('trackComment', {
     type: Sequelize.INTEGER.UNSIGNED,
     allowNull: false,
   },
+  totalLikes: {
+    type: Sequelize.INTEGER.UNSIGNED,
+    allowNull: false,
+    defaultValue: 0,
+  },
 }, {
   scopes: {
     withTrack: () => ({

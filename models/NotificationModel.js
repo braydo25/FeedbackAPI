@@ -15,6 +15,9 @@ const NotificationModel = database.define('notification', {
   trackCommentId: {
     type: Sequelize.INTEGER(10).UNSIGNED,
   },
+  trackCommentLikeId: {
+    type: Sequelize.INTEGER(10).UNSIGNED,
+  },
 });
 
 /*

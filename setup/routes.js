@@ -6,6 +6,7 @@ const notificationsRouter = rootRequire('/routes/notifications');
 const scraperRouter = rootRequire('/routes/scraper');
 const tracksRouter = rootRequire('/routes/tracks');
 const trackCommentsRouter = rootRequire('/routes/tracks/comments');
+const trackCommentLikesRouter = rootRequire('/routes/tracks/comments/likes');
 const trackPlaysRouter = rootRequire('/routes/tracks/plays');
 const usersRouter = rootRequire('/routes/users');
 
@@ -19,6 +20,7 @@ module.exports = app => {
   app.use('/scraper', scraperRouter);
   app.use('/tracks/:trackId?', tracksRouter);
   app.use('/tracks/:trackId/comments/:trackCommentId?', trackCommentsRouter);
+  app.use('/tracks/:trackId/comments/:trackCommentId/likes/:trackCommentLikeId?', trackCommentLikesRouter);
   app.use('/tracks/:trackId/plays', trackPlaysRouter);
   app.use('/users/:userId?', usersRouter);
 

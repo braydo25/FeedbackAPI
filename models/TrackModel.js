@@ -81,7 +81,7 @@ const TrackModel = database.define('track', {
     withGenre: () => ({
       include: [ database.models.genre ],
     }),
-    withRecentComments: () => ({
+    withRecentComments: limit => ({
       include: [
         {
           attributes: [
@@ -92,7 +92,7 @@ const TrackModel = database.define('track', {
             'createdAt',
           ],
           model: database.models.trackComment.scope('withUser'),
-          limit: 2,
+          limit: limit || 2,
           order: [ [ 'createdAt', 'DESC' ] ],
         },
       ],

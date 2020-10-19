@@ -33,6 +33,12 @@ global.testUserTwo = {
   password: 'test456789',
 };
 
+global.testUserThree = {
+  name: 'AAGAGAGA',
+  email: 'test4@test4.com',
+  password: 'test456789',
+};
+
 global.testTrackOne = {
   genreId: 14,
   name: 'Fighting Demons (Null Remix)',
@@ -49,6 +55,8 @@ global.testTrackThree = {
   name: 'Alison Wonderland x Naderi - Shape Of U (Cover)',
   description: '"This is one of my favorite tracks and I really wanted to remix it, but Ed Sheeran didn\'t reply to my twitter when I asked to remix it! So then Naderi and I decided to cover it when I was in Australia with him. It was really fun to recreate and I hope it makes you as happy as it does me." - Alison Wonderland',
 };
+
+global.testTrackThreeComment = {};
 
 /*
  * Configure Chai
@@ -165,13 +173,23 @@ before(done => {
       .set('X-Access-Token', testUserTwo.accessToken)
       .send({ name: testUserTwo.name, password: testUserTwo.password });
 
+    fatLog('Creating global test user three...');
+    const createdTestUserThreeResponse = await chai.request(server).post('/users').send(testUserThree);
+    testUserThree = { ...createdTestUserThreeResponse.body, ...testUserThree };
+
+    fatLog('Setting name and password for test user two...');
+    await chai.request(server)
+      .patch('/users/me')
+      .set('X-Access-Token', testUserTwo.accessToken)
+      .send({ name: testUserTwo.name, password: testUserTwo.password });
+
     fatLog('Creating global test track one...');
     const createdTestTrackOneResponse = await chai.request(server)
       .post('/tracks')
       .set('X-Access-Token', testUserOne.accessToken);
     testTrackOne = { ...createdTestTrackOneResponse.body, ...testTrackOne };
 
-    fatLog('Updating globl test track one...');
+    fatLog('Updating global test track one...');
     await chai.request(server)
       .patch(`/tracks/${testTrackOne.id}`)
       .set('X-Access-Token', testUserOne.accessToken)
@@ -198,23 +216,35 @@ before(done => {
     fatLog('Creating global test track three...');
     const createdTestTrackThreeResponse = await chai.request(server)
       .post('/tracks')
-      .set('X-Access-Token', testUserOne.accessToken);
+      .set('X-Access-Token', testUserTwo.accessToken);
     testTrackThree = { ...createdTestTrackThreeResponse.body, ...testTrackThree };
 
     fatLog('Updating global test track three...');
     await chai.request(server)
       .patch(`/tracks/${testTrackThree.id}`)
-      .set('X-Access-Token', testUserOne.accessToken)
+      .set('X-Access-Token', testUserTwo.accessToken)
       .field('genreId', testTrackThree.genreId)
       .field('name', testTrackThree.name)
       .field('description', testTrackThree.description)
       .attach('audio', fs.readFileSync('./test/testSong2.mp3'), 'song.mp3');
 
     fatLog('Creating test track comment one...');
-    await chai.request(server)
-      .post(`/tracks/${testTrackOne.id}/comments`)
-      .set('X-Access-Token', testUserTwo.accessToken)
+    const createdTestTrackThreeCommentResponse = await chai.request(server)
+      .post(`/tracks/${testTrackThree.id}/comments`)
+      .set('X-Access-Token', testUserOne.accessToken)
       .send({ text: 'this is super good way to go!', time: 30 });
+    testTrackThreeComment = { ...createdTestTrackThreeCommentResponse.body };
+
+    fatLog('Creating test track comment two...');
+    await chai.request(server)
+      .post(`/tracks/${testTrackTwo.id}/comments`)
+      .set('X-Access-Token', testUserThree.accessToken)
+      .send({ text: 'this is testing yo yo yo!', time: 40 });
+
+    fatLog('Creating test track comment one line...');
+    await chai.request(server)
+      .post(`/tracks/${testTrackThree.id}/comments/${testTrackThreeComment.id}/likes`)
+      .set('X-Access-Token', testUserThree.accessToken);
 
     done();
   })();

@@ -7,4 +7,5 @@
 module.exports = {
   constant: 0.2,
   commentExp: 50,
+  commentLikeExp: 10,
 };

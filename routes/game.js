@@ -15,6 +15,7 @@ const router = express.Router({
 router.get('/', userAuthorize);
 router.get('/', asyncMiddleware(async (request, response) => {
   const { user } = request;
+  const scope = [ 'withGenre', 'withUser', { method: [ 'withRecentComments', 10 ] } ];
   const options = {
     where: [
       {
@@ -32,7 +33,7 @@ router.get('/', asyncMiddleware(async (request, response) => {
     limit: 15,
   };
 
-  const preferredTracks = await TrackModel.scope([ 'withGenre', 'withUser' ]).findAll(options);
+  const preferredTracks = await TrackModel.scope(scope).findAll(options);
 
   if (preferredTracks.length) {
     return response.success(preferredTracks);
@@ -40,7 +41,7 @@ router.get('/', asyncMiddleware(async (request, response) => {
 
   delete options.where[0].genreId;
 
-  const allTracks = await TrackModel.scope([ 'withGenre', 'withUser' ]).findAll(options);
+  const allTracks = await TrackModel.scope(scope).findAll(options);
 
   response.success(allTracks);
 }));

@@ -12,8 +12,10 @@
     "enableTestResponseLogging": true,
     "testUserOne": true,
     "testUserTwo": true,
+    "testUserThree": true,
     "testTrackOne": true,
     "testTrackTwo": true,
     "testTrackThree": true,
+    "testTrackThreeComment": true
   },
 }
