@@ -45,7 +45,7 @@ router.post('/', asyncMiddleware(async (request, response) => {
     UserDeviceModel.sendPushNotificationForUserId({
       userId: trackComment.userId,
       title: `${user.name} Liked Your Comment!`,
-      message: `You earned ${levelsConfig.commentLikeExp} EXP for your comment "${trackComment.text}".`,
+      message: `You earned ${levelsConfig.commentLikeExp} EXP from this "like" on your comment "${trackComment.text}".`,
     });
   } else if (trackCommentLike.deletedAt) {
     await trackCommentLike.restore();
