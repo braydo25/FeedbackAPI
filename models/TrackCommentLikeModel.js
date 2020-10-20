@@ -21,10 +21,20 @@ const TrackCommentLikeModel = database.define('trackCommentLike', {
 }, {
   scopes: {
     withTrackComment: () => ({
-      include: [ database.models.trackComment ],
+      include: [
+        {
+          model: database.models.trackComment.scope('withTrack'),
+          required: true,
+        },
+      ],
     }),
     withUser: () => ({
-      include: [ database.models.user.scope('trackUser') ],
+      include: [
+        {
+          model: database.models.user.scope('trackUser'),
+          required: true,
+        },
+      ],
     }),
   },
 });

@@ -20,9 +20,10 @@ const router = express.Router({
 router.get('/', userAuthorize);
 router.get('/', trackAssociate);
 router.get('/', asyncMiddleware(async (request, response) => {
-  const { track } = request;
+  const { user, track } = request;
+  const scope = [ 'withUser', { method: [ 'withAuthUserLike', user.id ] } ];
 
-  const trackComments = await TrackCommentModel.scope('withUser').findAll({
+  const trackComments = await TrackCommentModel.scope(scope).findAll({
     where: { trackId: track.id },
     order: [ [ 'createdAt', 'DESC' ] ],
   });

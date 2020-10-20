@@ -15,7 +15,17 @@ const router = express.Router({
 router.get('/', userAuthorize);
 router.get('/', asyncMiddleware(async (request, response) => {
   const { user } = request;
-  const scope = [ 'withGenre', 'withUser', { method: [ 'withRecentComments', 10 ] } ];
+  const scope = [
+    'withGenre',
+    'withUser',
+    {
+      method: [ 'withRecentComments', {
+        userId: user.id,
+        limit: 10,
+      } ],
+    },
+  ];
+
   const options = {
     where: [
       {

@@ -34,7 +34,9 @@ router.get('/', asyncMiddleware(async (request, response) => {
     return response.success(track);
   }
 
-  const tracks = await TrackModel.scope([ 'withGenre', 'withRecentComments', 'withUser' ]).findAll({
+  const tracks = await TrackModel.scope([ 'withGenre', 'withUser', {
+    method: [ 'withRecentComments', { userId: user.id } ],
+  } ]).findAll({
     where: {
       userId: userId || user.id,
       draft: false,
@@ -102,8 +104,8 @@ router.patch('/', asyncMiddleware(async (request, response) => {
       waveform: audioData.waveform,
     } : {}),
     genreId: genreId || track.genreId,
-    name: name || track.name,
-    description: description || track.description,
+    name: (name) ? name.trim() : track.name,
+    description: (description) ? description.trim() : track.description,
   };
 
   if (data.name && data.genreId && data.mp3Url) {

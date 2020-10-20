@@ -19,6 +19,7 @@ TrackModel.hasMany(TrackCommentModel);
 
 TrackCommentModel.belongsTo(TrackModel);
 TrackCommentModel.belongsTo(UserModel);
+TrackCommentModel.hasOne(TrackCommentLikeModel, { as: 'authUserTrackCommentLike', foreignKey: 'trackCommentId' });
 TrackCommentModel.hasMany(TrackCommentLikeModel);
 
 TrackCommentLikeModel.belongsTo(TrackCommentModel);

@@ -17,10 +17,11 @@ const router = express.Router({
 router.get('/', userAuthorize);
 router.get('/', asyncMiddleware(async (request, response) => {
   const { user } = request;
+
   const commentNotifications = await NotificationModel.findAll({
     include: [
       {
-        model: TrackCommentModel.scope([ 'withTrack', 'withUser' ]),
+        model: TrackCommentModel.scope([ 'withTrack', 'withUser', { method: [ 'withAuthUserLike', user.id ] } ]),
         required: true,
       },
     ],
@@ -44,7 +45,7 @@ router.get('/', asyncMiddleware(async (request, response) => {
     ...commentLikeNotifications,
   ];
 
-  notifications.sort((a, b) => b.createdAt > a.createdAt);
+  notifications.sort((a, b) => b.createdAt - a.createdAt);
 
   response.success(notifications);
 }));

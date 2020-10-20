@@ -45,11 +45,32 @@ const TrackCommentModel = database.define('trackComment', {
   },
 }, {
   scopes: {
+    withAuthUserLike: userId => ({
+      include: [
+        {
+          attributes: [ 'id' ],
+          model: database.models.trackCommentLike,
+          as: 'authUserTrackCommentLike',
+          where: { userId },
+          required: false,
+        },
+      ],
+    }),
     withTrack: () => ({
-      include: [ database.models.track.unscoped().scope('minimal') ],
+      include: [
+        {
+          model: database.models.track.unscoped().scope('minimal'),
+          required: true,
+        },
+      ],
     }),
     withUser: () => ({
-      include: [ database.models.user.scope('trackUser') ],
+      include: [
+        {
+          model: database.models.user.scope('trackUser'),
+          required: true,
+        },
+      ],
     }),
   },
 });
