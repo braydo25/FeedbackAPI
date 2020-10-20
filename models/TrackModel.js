@@ -95,7 +95,6 @@ const TrackModel = database.define('track', {
             method: [ 'withAuthUserLike', userId ],
           } ]),
           limit: limit || 2,
-          order: [ [ 'createdAt', 'DESC' ] ],
         },
       ],
     }),
